@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+ion-content {
+  --background: #f7f9fb;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+.search-bar {
+  background: white;
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
+  ion-icon { color: #737686; font-size: 20px; }
+
+  input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 15px;
+    color: #191c1e;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+
+    &::placeholder { color: #9fa1b0; }
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.filter-active {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: #1C6E8C;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.filter-inactive {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: white;
+  color: #434654;
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:active { transform: scale(0.98); }
+}
+
+.service-image {
+  height: 140px;
+  background: #e8f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.service-emoji {
+  font-size: 60px;
+}
+
+.badge-ouvert {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #006c49;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.confirmation-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.service-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #191c1e;
+  margin: 0 0 4px;
+}
+
+.service-type {
+  font-size: 13px;
+  color: #434654;
+  margin: 0;
+}
+
+.attente-value {
+  color: #006c49;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  margin: 0;
+}
+
+.attente-label {
+  font-size: 10px;
+  color: #434654;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 2px 0 0;
+}
+
+.empty-search {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 20px;
+
+  p {
+    font-size: 14px;
+    color: #434654;
+    margin-top: 12px;
+  }
+}

@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap');
+
+ion-content { --background: #f4f6f9; }
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+.page-root { min-height: 100vh; background: #f4f6f9; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; background: #1C6E8C;
+}
+.top-left { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 36px; height: 36px; background: rgba(255,255,255,0.2);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  .material-symbols-outlined { color: white; font-size: 20px; font-family: 'Material Symbols Outlined'; }
+}
+.logo-text { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.04em; }
+.refresh-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  ion-icon { font-size: 20px; }
+}
+
+.content-area { padding: 20px; padding-bottom: 100px; }
+.section-title { font-size: 15px; font-weight: 700; color: #191c1e; margin-bottom: 12px; }
+.loading-box   { display: flex; justify-content: center; padding: 48px; }
+
+// ── TICKET ────────────────────────────────────────────
+.ticket-hero {
+  background: white; border-radius: 16px;
+  border: 2px solid #1C6E8C; padding: 16px; margin-bottom: 8px;
+}
+.ticket-top {
+  display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;
+}
+.ticket-label  { font-size: 10px; color: #9fa1b0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.ticket-number { font-size: 36px; font-weight: 800; color: #1C6E8C; }
+.ticket-statut-box { padding: 8px 12px; border-radius: 10px; }
+.ticket-statut-text { font-size: 13px; font-weight: 700; }
+.ticket-info-row { display: flex; gap: 12px; margin-bottom: 14px; }
+.ticket-info-item { flex: 1; background: #f4f6f9; border-radius: 10px; padding: 10px; text-align: center; }
+.ti-label { font-size: 11px; color: #9fa1b0; font-weight: 600; margin-bottom: 4px; }
+.ti-val   { font-size: 18px; font-weight: 800; color: #191c1e; }
+.annuler-ticket-btn {
+  width: 100%; padding: 12px; background: #fdecea; color: #ba1a1a;
+  border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+
+// ── EMPTY ─────────────────────────────────────────────
+.empty-box   { text-align: center; padding: 40px 20px; background: white; border-radius: 16px; border: 1px solid #eef0f4; }
+.empty-icon  { font-size: 40px; margin-bottom: 10px; }
+.empty-title { font-size: 15px; font-weight: 700; color: #191c1e; margin-bottom: 4px; }
+.empty-sub   { font-size: 13px; color: #9fa1b0; }
+
+// ── RDV LIST ──────────────────────────────────────────
+.rdv-list { display: flex; flex-direction: column; gap: 10px; }
+
+.rdv-card {
+  background: white; border-radius: 14px;
+  border: 1px solid #eef0f4; padding: 14px 16px;
+  position: relative; overflow: hidden;
+}
+
+.today-badge {
+  position: absolute; top: 0; right: 0;
+  background: #1C6E8C; color: white;
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px; border-radius: 0 14px 0 10px;
+}
+
+.rdv-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 12px;
+}
+.rdv-header-left { flex: 1; margin-right: 10px; }
+.rdv-etablissement { font-size: 15px; font-weight: 700; color: #191c1e; margin-bottom: 4px; }
+.rdv-prestataire   { font-size: 13px; color: #434654; margin-bottom: 2px; }
+.rdv-spec          { font-size: 12px; color: #1C6E8C; font-weight: 600; }
+
+.rdv-statut {
+  font-size: 11px; font-weight: 700;
+  padding: 5px 10px; border-radius: 8px;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.rdv-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 10px; border-top: 1px solid #f4f6f9;
+}
+.rdv-datetime { display: flex; gap: 12px; }
+.rdv-date-val { font-size: 13px; color: #434654; font-weight: 500; }
+.rdv-heure-val { font-size: 13px; color: #434654; font-weight: 500; }
+
+.annuler-rdv-btn {
+  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; color: #ba1a1a;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  ion-icon { font-size: 14px; }
+}

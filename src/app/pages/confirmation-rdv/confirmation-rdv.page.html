@@ -1,0 +1,64 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28 flex flex-col items-center">
+
+    <div class="px-6 pt-10 w-full">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6 w-full flex flex-col items-center" style="margin-top: 20px;">
+
+      <!-- Icone statut -->
+      <div class="status-icon" [style.background]="isConfirme() ? '#e8f8f0' : '#fff8e8'">
+        <span style="font-size: 56px;">{{ isConfirme() ? '✅' : '⏳' }}</span>
+      </div>
+
+      <!-- Message -->
+      <h2 class="status-title">{{ isConfirme() ? 'Réservation confirmée !' : 'Demande envoyée !' }}</h2>
+      <p class="status-desc">{{ isConfirme() ? 'Votre rendez-vous est confirmé.' : 'Le prestataire va examiner votre demande.' }}</p>
+
+      <!-- Ticket RDV -->
+      <div class="rdv-ticket">
+        <div class="ticket-header">
+          <p class="ticket-label">VOTRE RENDEZ-VOUS</p>
+          <span class="ticket-statut" [style.color]="isConfirme() ? '#006c49' : '#D4A017'">
+            {{ isConfirme() ? 'CONFIRMÉ' : 'EN ATTENTE' }}
+          </span>
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <div class="ticket-info-row" *ngIf="service">
+          <span class="ticket-info-label">Service</span>
+          <span class="ticket-info-value">{{ service.nom }}</span>
+        </div>
+
+        <div class="ticket-info-row" *ngIf="prestataire">
+          <span class="ticket-info-label">Prestataire</span>
+          <span class="ticket-info-value">{{ prestataire.nom }}</span>
+        </div>
+
+        <div class="ticket-info-row" *ngIf="creneau">
+          <span class="ticket-info-label">Heure</span>
+<span class="ticket-info-value highlight">{{ creneau.heureDebut || creneau.heure }}</span>        </div>
+
+        <div class="ticket-info-row">
+          <span class="ticket-info-label">Date</span>
+          <span class="ticket-info-value">Aujourd'hui</span>
+        </div>
+
+      </div>
+
+      <!-- Boutons -->
+      <button class="voir-rdv-btn" (click)="router.navigate(['/mes-rdv'])">
+        Voir mes rendez-vous
+      </button>
+
+      <button class="accueil-btn" (click)="router.navigate(['/client-home'])">
+        Retour à l'accueil
+      </button>
+
+    </div>
+
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

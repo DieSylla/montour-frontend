@@ -1,0 +1,48 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28" *ngIf="service">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6">
+
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-6">
+        <button class="back-btn" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div>
+          <h2 class="page-title">{{ service.nom }}</h2>
+          <p class="page-subtitle">Choisissez un prestataire</p>
+        </div>
+      </div>
+
+      <!-- Liste prestataires -->
+      <div class="prestataires-list">
+        <div *ngFor="let prest of prestataires"
+          class="prest-card"
+          (click)="choisirPrestataire(prest)">
+
+          <div class="prest-avatar">
+            {{ prest.nom.charAt(0) }}
+          </div>
+
+          <div class="prest-info">
+            <h3 class="prest-nom">{{ prest.nom }}</h3>
+            <p class="prest-specialite">{{ prest.specialite }}</p>
+            <div class="prest-meta">
+              <span class="meta-item">⏱ {{ prest.tempsAttente }} min</span>
+              <span class="meta-item">👥 {{ prest.nbEnFile }} en file</span>
+            </div>
+          </div>
+
+          <ion-icon name="chevron-forward-outline" class="prest-arrow"></ion-icon>
+        </div>
+      </div>
+
+    </div>
+
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

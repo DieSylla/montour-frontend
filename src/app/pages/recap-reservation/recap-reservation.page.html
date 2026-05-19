@@ -1,0 +1,87 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28" *ngIf="service && creneau">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6">
+
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-6">
+        <button class="back-btn" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div>
+          <h2 class="page-title">Récapitulatif</h2>
+          <p class="page-subtitle">Vérifiez votre réservation</p>
+        </div>
+      </div>
+
+      <!-- Recap card -->
+      <div class="recap-card mb-6">
+
+        <div class="recap-row">
+          <span class="recap-label">Service</span>
+          <span class="recap-value">{{ service.nom }}</span>
+        </div>
+
+        <div class="recap-divider"></div>
+
+        <div class="recap-row" *ngIf="prestataire">
+          <span class="recap-label">Prestataire</span>
+          <span class="recap-value">{{ prestataire.nom }}</span>
+        </div>
+
+        <div class="recap-divider" *ngIf="prestataire"></div>
+
+        <div class="recap-row" *ngIf="prestataire">
+          <span class="recap-label">Spécialité</span>
+          <span class="recap-value">{{ prestataire.specialite }}</span>
+        </div>
+
+        <div class="recap-divider"></div>
+
+        <div class="recap-row">
+          <span class="recap-label">Date</span>
+          <span class="recap-value">Aujourd'hui</span>
+        </div>
+
+        <div class="recap-divider"></div>
+
+        <div class="recap-row">
+          <span class="recap-label">Heure</span>
+<span class="recap-value highlight">{{ creneau.heureDebut || creneau.heure }}</span>        </div>
+
+        <div class="recap-divider"></div>
+
+        <div class="recap-row">
+          <span class="recap-label">Client</span>
+          <span class="recap-value">{{ user?.prenom }} {{ user?.nom }}</span>
+        </div>
+
+      </div>
+
+      <!-- Mode confirmation -->
+      <div class="confirmation-mode-card mb-6" [style.border-color]="service.confirmationMode === 'auto' ? '#006c49' : '#D4A017'">
+        <span style="font-size: 24px;">{{ service.confirmationMode === 'auto' ? '✅' : '⏳' }}</span>
+        <div>
+          <p class="mode-title">{{ service.confirmationMode === 'auto' ? 'Confirmation automatique' : 'En attente de validation' }}</p>
+          <p class="mode-desc">{{ service.confirmationMode === 'auto' ? 'Votre RDV sera confirmé immédiatement' : 'Le prestataire devra valider votre demande' }}</p>
+        </div>
+      </div>
+
+      <!-- Valider -->
+      <button class="valider-btn" (click)="valider()">
+        Confirmer la réservation
+      </button>
+
+      <button class="annuler-btn" (click)="router.navigate(['/client-home'])">
+        Annuler
+      </button>
+
+    </div>
+
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

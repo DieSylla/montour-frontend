@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+ion-content { --background: #f7f9fb; }
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  color: #1C6E8C;
+  ion-icon { font-size: 20px; }
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #191c1e;
+  margin: 0 0 2px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: #434654;
+  margin: 0;
+}
+
+.prestataires-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prest-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: all 0.2s;
+  &:active { transform: scale(0.98); }
+}
+
+.prest-avatar {
+  width: 50px;
+  height: 50px;
+  background: #1C6E8C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  min-width: 50px;
+}
+
+.prest-info { flex: 1; }
+
+.prest-nom {
+  font-size: 15px;
+  font-weight: 700;
+  color: #191c1e;
+  margin: 0 0 3px;
+}
+
+.prest-specialite {
+  font-size: 13px;
+  color: #1C6E8C;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.prest-meta {
+  display: flex;
+  gap: 12px;
+}
+
+.meta-item {
+  font-size: 12px;
+  color: #434654;
+  font-weight: 500;
+}
+
+.prest-arrow {
+  color: #c3c5d7;
+  font-size: 18px;
+}

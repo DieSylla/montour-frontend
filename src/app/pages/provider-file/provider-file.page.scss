@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+ion-content { --background: #f7f9fb; }
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+
+.page-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #191c1e;
+  margin: 0 0 4px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #434654;
+  margin: 0 0 20px;
+}
+
+.appeler-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1C6E8C;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+
+  ion-icon { font-size: 22px; }
+  &:active { transform: scale(0.98); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 20px;
+
+  h3 { font-size: 20px; font-weight: 700; color: #191c1e; margin: 12px 0 8px; }
+  p { font-size: 14px; color: #434654; }
+}
+
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.queue-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
+  &.first {
+    border: 2px solid #1C6E8C;
+  }
+}
+
+.queue-number {
+  width: 52px;
+  height: 52px;
+  background: #e6e8ea;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 22px;
+  color: #2D2D3A;
+  min-width: 52px;
+
+  &.first {
+    background: #1C6E8C;
+    color: white;
+  }
+}
+
+.queue-info { flex: 1; }
+
+.queue-client {
+  font-size: 15px;
+  font-weight: 700;
+  color: #191c1e;
+  margin: 0 0 3px;
+}
+
+.queue-spec {
+  font-size: 13px;
+  color: #434654;
+  margin: 0 0 3px;
+}
+
+.queue-time {
+  font-size: 12px;
+  color: #1C6E8C;
+  font-weight: 600;
+  margin: 0;
+}
+
+.queue-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.rang-badge {
+  background: #f2f4f6;
+  color: #434654;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.next-badge {
+  background: #1C6E8C;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}

@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+ion-content {
+  --background: #f7f9fb;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
+
+.otp-box {
+  width: 48px;
+  height: 56px;
+  background: white;
+  border: 2px solid #e0e3e5;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1C6E8C;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.verify-btn {
+  width: calc(100% - 48px);
+  padding: 16px;
+  background: #1C6E8C;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+
+  &:active { transform: scale(0.98); }
+}
+
+.keypad {
+  margin-top: auto;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 20px 24px 32px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.key {
+  background: #f2f4f6;
+  border: none;
+  border-radius: 14px;
+  height: 56px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #191c1e;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+
+  &:active {
+    background: #e0e3e5;
+    transform: scale(0.95);
+  }
+}
+
+.key-delete {
+  background: #ffe0e0;
+  color: #ba1a1a;
+}

@@ -1,0 +1,89 @@
+<ion-content>
+  <div class="page-wrapper">
+
+    <!-- MonTour Header exact comme la page d'accueil -->
+    <div class="px-4 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <!-- Grande carte profil bleue -->
+    <div class="profile-card-wrap">
+      <div class="profile-card">
+        <div class="avatar-wrapper">
+          <div class="avatar-circle">
+            <span class="avatar-initials">{{ user?.prenom?.charAt(0) }}{{ user?.nom?.charAt(0) }}</span>
+          </div>
+          
+        </div>
+        <h1 class="profile-name">{{ user?.prenom }} {{ user?.nom }}</h1>
+        <div class="profile-badge">
+          {{ getRoleLabel() | uppercase }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="menu-list">
+
+      <div class="menu-item" (click)="goTo('info')">
+        <div class="menu-icon-wrap" style="background: #e8f4f8;">
+          <ion-icon name="person-outline" style="color: #1C6E8C;"></ion-icon>
+        </div>
+        <div class="menu-content">
+          <p class="menu-title">Informations personnelles</p>
+          <p class="menu-subtitle">Gérer votre identité et vos coordonnées</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
+      </div>
+
+      <div class="menu-item" (click)="goTo('notifications')">
+        <div class="menu-icon-wrap" style="background: #fff8e8;">
+          <ion-icon name="notifications-outline" style="color: #D4A017;"></ion-icon>
+        </div>
+        <div class="menu-content">
+          <p class="menu-title">Paramètres de notification</p>
+          <p class="menu-subtitle">Alertes de file d'attente et SMS</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
+      </div>
+
+      <div class="menu-item" (click)="goTo('security')">
+        <div class="menu-icon-wrap" style="background: #ffeaea;">
+          <ion-icon name="shield-outline" style="color: #ba1a1a;"></ion-icon>
+        </div>
+        <div class="menu-content">
+          <p class="menu-title">Sécurité</p>
+          <p class="menu-subtitle">Mot de passe et authentification</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
+      </div>
+
+      <div class="menu-item" (click)="goTo('support')">
+        <div class="menu-icon-wrap" style="background: #f0f0f0;">
+          <ion-icon name="help-circle-outline" style="color: #434654;"></ion-icon>
+        </div>
+        <div class="menu-content">
+          <p class="menu-title">Aide & Support</p>
+          <p class="menu-subtitle">Centre d'aide et contact client</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
+      </div>
+
+    </div>
+
+    <!-- Logout -->
+    <div class="logout-wrap">
+      <button class="logout-btn" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        DÉCONNEXION
+      </button>
+    </div>
+
+    <!-- Version -->
+    <p class="version-text">VERSION 2.4.0 • MONTOUR SÉNÉGAL</p>
+
+    <!-- Bottom Nav -->
+<app-bottom-nav *ngIf="isClient()" activePage="profile"></app-bottom-nav>
+<app-bottom-nav-provider *ngIf="isPrestataire()" activePage="profil"></app-bottom-nav-provider>
+  </div>
+</ion-content>

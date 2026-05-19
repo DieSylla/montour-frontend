@@ -1,0 +1,216 @@
+<ion-content>
+<div class="page-root">
+
+  <!-- ══════════════════ VUE LISTE ══════════════════ -->
+  <ng-container *ngIf="vue === 'liste'">
+
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <div class="logo-icon">
+          <span class="material-symbols-outlined">confirmation_number</span>
+        </div>
+        <span class="logo-text">MonTour</span>
+      </div>
+      <button class="notif-btn" (click)="router.navigate(['/notifications'])">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+    </header>
+
+    <div class="content-area">
+      <div class="section-head">
+        <div>
+          <h2 class="page-title">Mes disponibilités</h2>
+          <p class="page-sub">{{ creneauxParDate.length }} jour(s) avec des créneaux</p>
+        </div>
+        <button class="add-fab" (click)="ouvrirFormulaire()">
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="loading" class="loading-box">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+
+      <div *ngIf="!loading && creneauxParDate.length === 0" class="empty-box">
+        <div class="empty-icon">📅</div>
+        <p class="empty-title">Aucun créneau défini</p>
+        <p class="empty-sub">Ajoutez vos disponibilités pour recevoir des réservations</p>
+        <button class="empty-cta" (click)="ouvrirFormulaire()">+ Ajouter un créneau</button>
+      </div>
+
+      <!-- Une carte par date -->
+      <div class="date-group" *ngFor="let groupe of creneauxParDate">
+
+        <!-- En-tête de date (cliquable pour déplier) -->
+        <div class="date-header" (click)="toggleGroupe(groupe)">
+          <div class="date-header-left">
+            <span class="date-icon">📅</span>
+            <span class="date-label">{{ groupe.date }}</span>
+            <span class="date-count">{{ groupe.creneaux.length }} créneau(x)</span>
+          </div>
+          <ion-icon
+            [name]="groupe.expanded ? 'chevron-down-outline' : 'chevron-forward-outline'"
+            class="date-arrow">
+          </ion-icon>
+        </div>
+
+        <!-- Créneaux de cette date (dépliables) -->
+        <div class="creneaux-list" *ngIf="groupe.expanded">
+          <div class="creneau-row" *ngFor="let c of groupe.creneaux" (click)="voirClients(c)">
+            <div class="creneau-row-left">
+              <span class="creneau-heure">{{ c.heureDebut }} — {{ c.heureFin }}</span>
+              <span class="creneau-duree">{{ c.dureePrestation }} min/client</span>
+            </div>
+            <div class="creneau-row-right">
+              <button class="c-delete-btn" (click)="$event.stopPropagation(); supprimerCreneau(c)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+              <ion-icon name="chevron-forward-outline" class="c-arrow"></ion-icon>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <app-bottom-nav-provider activePage="rdv"></app-bottom-nav-provider>
+  </ng-container>
+
+  <!-- ══════════════════ VUE FORMULAIRE ══════════════════ -->
+  <ng-container *ngIf="vue === 'form'">
+    <div class="form-page">
+
+      <div class="form-topbar">
+        <button class="back-btn" (click)="retourListe()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h2 class="form-title">Nouveau créneau</h2>
+      </div>
+
+      <div class="form-body">
+
+        <!-- Calendrier -->
+        <div class="form-section">
+          <p class="form-label">Choisir les dates</p>
+          <div class="calendar-card">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" (click)="moisPrecedent()">‹</button>
+              <span class="cal-month">{{ moisActuel }}</span>
+              <button class="cal-nav-btn" (click)="moisSuivant()">›</button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-day-label" *ngFor="let j of joursLabels">{{ j }}</div>
+              <div *ngFor="let day of calendarDays"
+                [class]="!day ? 'cal-day empty' : day.passe ? 'cal-day past' : isDateSelected(day.date) ? 'cal-day selected' : 'cal-day'"
+                (click)="day && !day.passe && toggleDate(day)">
+                {{ day?.num || '' }}
+              </div>
+            </div>
+          </div>
+          <p class="form-hint" *ngIf="nouveauCreneau.dates.length > 0">
+            ✅ {{ nouveauCreneau.dates.length }} date(s) sélectionnée(s)
+          </p>
+        </div>
+
+        <!-- Horaires -->
+        <div class="form-section">
+          <p class="form-label">Horaires</p>
+          <div class="horaires-row">
+            <div class="horaire-field">
+              <label class="horaire-lbl">Début</label>
+              <input type="time" [(ngModel)]="nouveauCreneau.heureDebut" class="time-input"/>
+            </div>
+            <div class="horaire-arrow">→</div>
+            <div class="horaire-field">
+              <label class="horaire-lbl">Fin</label>
+              <input type="time" [(ngModel)]="nouveauCreneau.heureFin" class="time-input"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Durée -->
+        <div class="form-section">
+          <p class="form-label">Durée par consultation</p>
+          <div class="duree-pills">
+            <button *ngFor="let d of durees"
+              [class]="nouveauCreneau.dureePrestation === d ? 'duree-pill active' : 'duree-pill'"
+              (click)="nouveauCreneau.dureePrestation = d">
+              {{ d }} min
+            </button>
+          </div>
+          <div class="capacite-info" *ngIf="calculerCapacite() > 0">
+            📊 Capacité : <strong>{{ calculerCapacite() }} client(s)</strong> par session
+          </div>
+        </div>
+
+        <button class="save-btn" (click)="ajouterCreneau()">
+          <ion-icon name="checkmark-outline"></ion-icon>
+          Créer ce créneau
+        </button>
+
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ══════════════════ VUE CLIENTS D'UN CRÉNEAU ══════════════════ -->
+  <ng-container *ngIf="vue === 'clients-creneau'">
+    <div class="form-page">
+
+      <div class="form-topbar">
+        <button class="back-btn" (click)="retourListe()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h2 class="form-title">Réservations</h2>
+        <button class="delete-btn-top" (click)="supprimerCreneau(creneauSelectionne)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Info créneau sélectionné -->
+      <div class="creneau-banner" *ngIf="creneauSelectionne">
+        <span class="cb-date">📅 {{ creneauSelectionne.date }}</span>
+        <span class="cb-heure">{{ creneauSelectionne.heureDebut }} — {{ creneauSelectionne.heureFin }}</span>
+        <span class="cb-duree">{{ creneauSelectionne.dureePrestation }} min/client</span>
+      </div>
+
+      <div class="form-body">
+        <div *ngIf="loadingClients" class="loading-box">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+        </div>
+
+        <div *ngIf="!loadingClients && clientsDuCreneau.length === 0" class="empty-box">
+          <div class="empty-icon">👥</div>
+          <p class="empty-title">Aucune réservation</p>
+          <p class="empty-sub">Ce créneau n'a pas encore de clients</p>
+        </div>
+
+        <div class="rdv-list">
+          <div *ngFor="let rdv of clientsDuCreneau" class="rdv-card">
+            <div class="rdv-side" [style.background]="getStatutColor(rdv.statut)"></div>
+            <div class="rdv-info">
+              <p class="rdv-client">{{ rdv.clientNom || ('Client #' + rdv.clientId?.slice(0,8)) }}</p>
+              <span class="rdv-badge"
+                [style.color]="getStatutColor(rdv.statut)"
+                [style.background]="getStatutColor(rdv.statut) + '18'">
+                {{ getStatutLabel(rdv.statut) }}
+              </span>
+            </div>
+            <div class="rdv-actions">
+              <button *ngIf="rdv.statut === 'EN_ATTENTE'" class="action-btn confirm" (click)="valider(rdv)">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </button>
+              <button *ngIf="rdv.statut === 'EN_ATTENTE'" class="action-btn refuse" (click)="refuser(rdv)">
+                <ion-icon name="close-circle-outline"></ion-icon>
+              </button>
+              <button *ngIf="rdv.statut === 'CONFIRMEE'" class="action-btn absent" (click)="marquerAbsent(rdv)">
+                <ion-icon name="person-remove-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+</ion-content>

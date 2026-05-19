@@ -1,0 +1,126 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] px-6 py-10 font-inter">
+
+ <!-- Header -->
+<app-montour-header subtitle="Créer votre compte"></app-montour-header>
+
+    <!-- Role selector -->
+    <div class="role-grid mb-8">
+        <div class="role-card" [class.role-active]="role === 'CLIENT'" (click)="changeRole('CLIENT')">        <div class="role-check" *ngIf="role === 'CLIENT'">✓</div>
+        <ion-icon name="person-outline" class="role-icon"></ion-icon>
+        <span class="role-label">Je suis client</span>
+      </div>
+        <div class="role-card" [class.role-active]="role === 'PRESTATAIRE'" (click)="changeRole('PRESTATAIRE')">        <div class="role-check" *ngIf="role === 'PRESTATAIRE'">✓</div>
+        <ion-icon name="storefront-outline" class="role-icon"></ion-icon>
+        <span class="role-label">Je suis prestataire</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-4">
+
+      <!-- Nom & Prénom -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">NOM</label>
+          <input type="text" placeholder="Ex: Ndoye" [(ngModel)]="nom" class="form-input"/>
+        </div>
+        <div>
+          <label class="form-label">PRÉNOM</label>
+          <input type="text" placeholder="Ex: Khalil" [(ngModel)]="prenom" class="form-input"/>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="form-label">EMAIL</label>
+        <input type="email" placeholder="votre@email.com" [(ngModel)]="email" class="form-input"/>
+      </div>
+
+      <!-- Téléphone -->
+      <div>
+        <label class="form-label">TÉLÉPHONE</label>
+        <input type="tel" placeholder="+221 77 000 00 00" [(ngModel)]="telephone" class="form-input"/>
+      </div>
+
+      <!-- Mot de passe -->
+      <div>
+        <label class="form-label">MOT DE PASSE</label>
+        <div class="relative">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            class="form-input pr-12"/>
+          <button class="absolute right-4 top-1/2 -translate-y-1/2 text-[#737686]" (click)="showPassword = !showPassword">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Champs prestataire -->
+      <div *ngIf="role === 'PRESTATAIRE'">
+        <div class="mb-4">
+          <label class="form-label">CODE ENTREPRISE</label>
+          <input type="text" placeholder="Ex: B4907115" [(ngModel)]="codeEntreprise" class="form-input"/>
+        </div>
+        <div>
+          <label class="form-label">SPÉCIALITÉ</label>
+          <input type="text" placeholder="Ex: Cardiologie" [(ngModel)]="specialite" class="form-input"/>
+        </div>
+      </div>
+
+    <!-- CGU -->
+<div class="flex items-start gap-3 mt-2">
+  <input type="checkbox" [(ngModel)]="acceptedCGU" class="cgu-checkbox mt-1"/>
+  <p class="text-sm text-[#434654]">
+    J'accepte les <span class="text-[#1C6E8C] font-semibold cursor-pointer" (click)="showCGU()">Conditions Générales d'Utilisation</span> et la politique de confidentialité de MonTour.
+  </p>
+</div>
+
+<!-- Modal CGU -->
+<div class="cgu-modal-overlay" *ngIf="cguVisible" (click)="closeCGU()">
+  <div class="cgu-modal" (click)="$event.stopPropagation()">
+    <div class="cgu-header">
+      <h2>Conditions Générales d'Utilisation</h2>
+      <button (click)="closeCGU()">✕</button>
+    </div>
+    <div class="cgu-content">
+      <h3>1. Objet</h3>
+      <p>MonTour est une application de gestion de file d'attente virtuelle permettant aux utilisateurs de réserver des tickets et des créneaux auprès de prestataires de services.</p>
+
+      <h3>2. Inscription</h3>
+      <p>L'inscription est gratuite et ouverte à toute personne physique. Vous vous engagez à fournir des informations exactes et à jour lors de votre inscription.</p>
+
+      <h3>3. Utilisation du service</h3>
+      <p>MonTour s'engage à fournir un service de qualité. L'utilisateur s'engage à utiliser l'application de manière responsable et à ne pas perturber le bon fonctionnement du service.</p>
+
+      <h3>4. Données personnelles</h3>
+      <p>Vos données personnelles sont collectées et traitées conformément à notre politique de confidentialité. Elles ne sont jamais vendues à des tiers.</p>
+
+      <h3>5. Responsabilité</h3>
+      <p>MonTour ne peut être tenu responsable des retards ou annulations de la part des prestataires de services.</p>
+
+      <h3>6. Contact</h3>
+      <p>Pour toute question, contactez-nous à : contact&#64;montour.sn</p>
+    </div>
+    <button class="cgu-accept-btn" (click)="acceptCGUFromModal()">
+      J'accepte les conditions
+    </button>
+  </div>
+</div>
+
+      <!-- Submit -->
+      <button (click)="register()" class="submit-btn">
+        S'inscrire →
+      </button>
+
+      <!-- Login link -->
+      <p class="text-center text-[#434654] text-sm mt-4">
+        Déjà un compte ?
+        <a (click)="goBack()" class="text-[#1C6E8C] font-bold cursor-pointer ml-1">Se connecter</a>
+      </p>
+
+    </div>
+  </div>
+</ion-content>

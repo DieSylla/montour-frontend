@@ -1,0 +1,107 @@
+<ion-content>
+<div class="page-root">
+
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
+      </div>
+      <span class="logo-text">MonTour</span>
+    </div>
+    <button class="notif-btn" (click)="router.navigate(['/notifications'])">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <span class="notif-badge" *ngIf="nbNotifNonLues > 0">{{ nbNotifNonLues }}</span>
+    </button>
+  </header>
+
+  <div class="hero-section">
+    <p class="hero-specialite">{{ user?.specialite }}</p>
+    <h2 class="hero-etablissement">{{ entrepriseNom || 'Mon établissement' }}</h2>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-val" [style.color]="stats.enAttente > 0 ? '#1C6E8C' : '#191c1e'">{{ stats.enAttente }}</span>
+        <span class="stat-lbl">En attente</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">{{ stats.traites }}</span>
+        <span class="stat-lbl">Traités</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" [style.color]="stats.rdvDuJour > 0 ? '#006c49' : '#191c1e'">{{ stats.rdvDuJour }}</span>
+        <span class="stat-lbl">RDV aujourd'hui</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <div class="section-head">
+      <h2 class="section-title">File d'attente du jour</h2>
+      <button class="appeler-btn"
+        (click)="appelerSuivant()"
+        [class.disabled]="stats.enAttente === 0"
+        [disabled]="stats.enAttente === 0">
+        <ion-icon name="megaphone-outline"></ion-icon>
+        Appeler
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-box">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    <div *ngIf="!loading && fileUnifiee.length === 0" class="empty-box">
+      <div class="empty-icon">🎉</div>
+      <p class="empty-title">Aucun client en attente</p>
+    </div>
+
+    <div class="file-list">
+      <div *ngFor="let element of fileUnifiee; let i = index"
+        class="file-card"
+        [class.first]="i === 0"
+        [class.appele]="element.statut === 'APPELE'">
+
+        <div class="type-indicator" [style.background]="getTypeColor(element)">
+          <ion-icon [name]="element.type === 'RDV' ? 'calendar-outline' : 'ticket-outline'"></ion-icon>
+        </div>
+
+        <div class="element-heure">
+          <span class="heure-val">{{ element.heureAffichage }}</span>
+          <span class="heure-lbl">{{ element.type === 'RDV' ? 'RDV' : 'Estimé' }}</span>
+        </div>
+
+        <div class="element-info">
+          <p class="element-label">{{ element.label }}</p>
+          <p class="element-client">Client #{{ element.clientId?.slice(0,8) }}</p>
+          <span class="element-badge"
+            [style.color]="getStatutColor(element)"
+            [style.background]="getStatutColor(element) + '18'">
+            {{ element.statut === 'APPELE' ? '📣 Appelé' : element.statut === 'CONFIRMEE' ? '✅ Confirmé' : '⏳ En attente' }}
+          </span>
+        </div>
+
+        <div class="premier-badge" *ngIf="i === 0">Suivant</div>
+
+        <button *ngIf="element.statut === 'APPELE'" class="terminer-btn" (click)="terminer(element)">
+          <ion-icon name="checkmark-done-outline"></ion-icon>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="legende" *ngIf="fileUnifiee.length > 0">
+      <div class="legende-item">
+        <div class="legende-dot" style="background:#1C6E8C"></div>
+        <span>Ticket walk-in</span>
+      </div>
+      <div class="legende-item">
+        <div class="legende-dot" style="background:#006c49"></div>
+        <span>RDV planifié</span>
+      </div>
+    </div>
+
+  </div>
+
+  <app-bottom-nav-provider activePage="home"></app-bottom-nav-provider>
+</div>
+</ion-content>

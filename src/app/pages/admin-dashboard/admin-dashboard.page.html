@@ -1,0 +1,116 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-10">
+
+<!-- Header MonTour -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+  <div class="flex items-center justify-between px-6 py-4">
+    <div class="flex items-center gap-2">
+      <div style="background: #1C6E8C; padding: 8px; border-radius: 12px; display: inline-flex;">
+        <span class="material-symbols-outlined" style="color: white; font-size: 24px; font-family: 'Material Symbols Outlined';">confirmation_number</span>
+      </div>
+      <h1 style="font-size: 22px; font-weight: 900; color: #1C6E8C; letter-spacing: -0.05em;">MonTour</h1>
+    </div>
+    <button class="header-icon-btn" (click)="router.navigate(['/profile'])">
+      <ion-icon name="person-outline"></ion-icon>
+    </button>
+  </div>
+</header>
+
+    <div style="margin-top: 80px;">
+
+      <!-- Stats section -->
+      <div class="admin-stats px-6 mb-6">
+        <p class="admin-title">Administration 🛡️</p>
+        <p class="admin-subtitle">MonTour — Panneau de contrôle</p>
+        <div class="stats-grid mt-4">
+          <div class="stat-card">
+            <ion-icon name="people-outline"></ion-icon>
+            <span class="stat-value">{{ stats.totalUsers }}</span>
+            <span class="stat-label">Utilisateurs</span>
+          </div>
+          <div class="stat-card">
+            <ion-icon name="business-outline"></ion-icon>
+            <span class="stat-value">{{ stats.totalEntreprises }}</span>
+            <span class="stat-label">Entreprises</span>
+          </div>
+          <div class="stat-card">
+            <ion-icon name="ticket-outline"></ion-icon>
+            <span class="stat-value">{{ stats.totalTickets }}</span>
+            <span class="stat-label">Tickets</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs px-6 mb-4">
+        <button [class]="activeTab === 'stats' ? 'tab active' : 'tab'" (click)="activeTab = 'stats'">
+          Vue d'ensemble
+        </button>
+        <button [class]="activeTab === 'entreprises' ? 'tab active' : 'tab'" (click)="activeTab = 'entreprises'">
+          Entreprises
+          <span class="badge" *ngIf="pendingEntreprises.length > 0">{{ pendingEntreprises.length }}</span>
+        </button>
+      </div>
+
+      <!-- Vue d'ensemble -->
+      <div class="px-6" *ngIf="activeTab === 'stats'">
+        <div class="action-cards">
+
+          <div class="action-card" (click)="activeTab = 'entreprises'">
+            <div class="action-icon" style="background: #e8f4f8;">
+              <ion-icon name="business-outline" style="color: #1C6E8C;"></ion-icon>
+            </div>
+            <div class="action-info">
+              <p class="action-title">Entreprises en attente</p>
+              <p class="action-desc">{{ pendingEntreprises.length }} demande(s) à traiter</p>
+            </div>
+          </div>
+
+          <div class="action-card" (click)="router.navigate(['/admin-users'])">
+            <div class="action-icon" style="background: #e8f8f0;">
+              <ion-icon name="people-outline" style="color: #006c49;"></ion-icon>
+            </div>
+            <div class="action-info">
+              <p class="action-title">Gérer les utilisateurs</p>
+              <p class="action-desc">{{ stats.totalUsers }} utilisateur(s) inscrits</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Entreprises en attente -->
+      <div class="px-6" *ngIf="activeTab === 'entreprises'">
+
+        <div *ngIf="pendingEntreprises.length === 0" class="empty-state">
+          <span style="font-size: 48px;">✅</span>
+          <p>Aucune demande en attente</p>
+        </div>
+
+        <div class="entreprise-list">
+          <div *ngFor="let e of pendingEntreprises" class="entreprise-card">
+            <div class="entreprise-info">
+              <h3 class="entreprise-nom">{{ e.nom }}</h3>
+              <p class="entreprise-type">{{ e.typeService }}</p>
+              <p class="entreprise-ninea">NINEA : {{ e.ninea }}</p>
+              <p class="entreprise-email">{{ e.email }}</p>
+            </div>
+            <div class="entreprise-actions">
+              <button class="btn-valider" (click)="valider(e)">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              </button>
+              <button class="btn-rejeter" (click)="rejeter(e)">
+                <ion-icon name="close-circle-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Profile -->
+      
+    </div>
+
+  </div>
+</ion-content>

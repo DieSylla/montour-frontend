@@ -1,0 +1,99 @@
+<ion-content>
+<div class="page-root">
+
+  <header class="top-bar">
+  <div class="top-left">
+    <div class="logo-icon">
+      <span class="material-symbols-outlined">confirmation_number</span>
+    </div>
+    <span class="logo-text">MonTour</span>
+  </div>
+</header>
+
+  <div class="content-area">
+
+    <div *ngIf="loading" class="loading-box">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    <!-- TICKET ACTIF -->
+    <ng-container *ngIf="ticketActif">
+      <p class="section-title">Mon ticket en cours</p>
+      <div class="ticket-hero">
+        <div class="ticket-top">
+          <div>
+            <p class="ticket-label">NUMÉRO DE TICKET</p>
+            <h2 class="ticket-number">#{{ ticketActif.numero }}</h2>
+          </div>
+          <div class="ticket-statut-box"
+            [style.background]="getTicketStatutColor(ticketActif.statut) + '18'">
+            <span [style.color]="getTicketStatutColor(ticketActif.statut)" class="ticket-statut-text">
+              {{ ticketActif.statut === 'APPELE' ? '📣 C\'est votre tour !' : '⏳ En attente' }}
+            </span>
+          </div>
+        </div>
+        <div class="ticket-info-row">
+          <div class="ticket-info-item">
+            <p class="ti-label">Position</p>
+            <p class="ti-val">{{ ticketActif.rang }}</p>
+          </div>
+          <div class="ticket-info-item">
+            <p class="ti-label">Attente estimée</p>
+            <p class="ti-val">{{ ticketActif.tempsAttenteEstime }} min</p>
+          </div>
+        </div>
+        <button class="annuler-ticket-btn" (click)="annulerTicket()">
+          Quitter la file
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- MES RDV -->
+    <p class="section-title" [style.margin-top]="ticketActif ? '20px' : '0'">
+      Mes réservations
+    </p>
+
+    <div *ngIf="reservations.length === 0 && !loading" class="empty-box">
+      <div class="empty-icon">📅</div>
+      <p class="empty-title">Aucune réservation</p>
+      <p class="empty-sub">Réservez un créneau depuis l'accueil</p>
+    </div>
+
+    <div class="rdv-list">
+      <div *ngFor="let rdv of reservations" class="rdv-card">
+
+        <!-- Badge aujourd'hui -->
+        <div class="today-badge" *ngIf="estAujourdhui(rdv.date)">Aujourd'hui</div>
+
+        <div class="rdv-header">
+          <div class="rdv-header-left">
+            <p class="rdv-etablissement">{{ rdv.etablissementNom }}</p>
+            <p class="rdv-prestataire">👤 {{ rdv.prestataireNom }}</p>
+            <p class="rdv-spec">{{ rdv.specialite }}</p>
+          </div>
+          <span class="rdv-statut"
+            [style.color]="getStatutColor(rdv.statut)"
+            [style.background]="getStatutColor(rdv.statut) + '15'">
+            {{ getStatutLabel(rdv.statut) }}
+          </span>
+        </div>
+
+        <div class="rdv-footer">
+          <div class="rdv-datetime">
+            <span class="rdv-date-val">📅 {{ rdv.date }}</span>
+            <span class="rdv-heure-val">🕐 {{ rdv.heureDebut }}</span>
+          </div>
+          <button class="annuler-rdv-btn" *ngIf="peutAnnuler(rdv)" (click)="annulerRdv(rdv)">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            Annuler
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <app-bottom-nav activePage="rdv"></app-bottom-nav>
+</div>
+</ion-content>

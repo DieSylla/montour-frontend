@@ -1,0 +1,106 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex items-center justify-center" style="min-height: 50vh;">
+      <p style="color: #434654; font-size: 16px;">Chargement...</p>
+    </div>
+
+    <!-- Ticket actif -->
+    <div *ngIf="!loading && ticket" class="px-6">
+
+     
+
+      <!-- Ticket card -->
+      <div class="ticket-card mb-6">
+        <p class="ticket-label">VOTRE NUMÉRO</p>
+        <h1 class="ticket-num">A-{{ ticket.numero }}</h1>
+        <div class="flex items-center justify-center gap-2 mt-3">
+          <p style="color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500;">Guichet {{ ticket.specialite }}</p>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row mb-4">
+        <div class="stat-item">
+          <p class="stat-label">Votre position</p>
+          <p class="stat-value"><span style="font-size: 28px;">{{ ticket.rang }}</span><span style="font-size: 14px;">ème</span> dans la file</p>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width]="(100 - ticket.rang * 10) + '%'"></div>
+          </div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <p class="stat-label">Temps estimé</p>
+          <p class="stat-value"><span style="font-size: 28px;">{{ ticket.tempsAttenteEstime }}</span> <span style="font-size: 14px;">min</span></p>
+        </div>
+      </div>
+
+      <!-- Info cards -->
+      <div class="info-grid mb-6">
+        <div class="info-card">
+          <span style="font-size: 20px;">👥</span>
+          <div>
+            <p class="info-label">Devant vous</p>
+            <p class="info-value">{{ ticket.rang }} personne(s)</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <span style="font-size: 20px;">🕐</span>
+          <div>
+            <p class="info-label">Heure de passage</p>
+            <p class="info-value">{{ heureEstimee }}</p>          </div>
+        </div>
+      </div>
+
+      <!-- Map placeholder -->
+      <div class="map-section mb-6">
+        <h3 style="font-size: 16px; font-weight: 700; color: #191c1e; margin-bottom: 12px;">Localisation du guichet</h3>
+        <div class="map-card">
+          <div class="map-placeholder">
+            <span style="font-size: 48px;">🗺️</span>
+            <p style="color: #434654; font-size: 14px; margin-top: 8px;">Carte de localisation</p>
+          </div>
+          <div class="map-info">
+            <span style="font-size: 18px;">📍</span>
+            <div>
+              <p style="font-weight: 700; font-size: 14px; color: #191c1e;">{{ ticket.specialite }}</p>
+              <p style="font-size: 12px; color: #434654;">Dakar, Sénégal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <button class="share-btn mb-3" (click)="partagerPosition()">
+  Partager ma position
+</button>
+
+      <button class="cancel-btn mb-4" (click)="annuler()">
+        ✕ Annuler le ticket
+      </button>
+
+      <!-- Note -->
+      <div class="note-card">
+        <span style="font-size: 16px;">ℹ️</span>
+        <p style="font-size: 13px; color: #434654; line-height: 1.5; margin-left: 8px;">Veuillez vous présenter à l'accueil au moins 5 minutes avant votre heure de passage estimée.</p>
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!loading && !ticket" class="px-6 flex flex-col items-center justify-center" style="min-height: 60vh;">
+      <span style="font-size: 64px; margin-bottom: 16px;">🎫</span>
+      <h2 style="font-size: 22px; font-weight: 700; color: #191c1e; margin-bottom: 8px; text-align: center;">Aucun ticket actif</h2>
+      <p style="color: #434654; margin-bottom: 24px; text-align: center;">Prenez un ticket depuis l'accueil pour suivre votre position</p>
+      <button class="share-btn" (click)="goBack()">Retour à l'accueil</button>
+    </div>
+
+    <!-- Bottom Nav -->
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

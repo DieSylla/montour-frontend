@@ -1,0 +1,47 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6">
+      <h2 class="page-title">File d'attente</h2>
+      <p class="page-subtitle">{{ fileAttente.length }} client(s) en attente</p>
+
+      <!-- Bouton appeler -->
+      <button class="appeler-btn" (click)="appelerSuivant()" [style.opacity]="fileAttente.length === 0 ? '0.5' : '1'">
+        <ion-icon name="megaphone-outline"></ion-icon>
+        Appeler le suivant
+      </button>
+
+      <!-- Empty -->
+      <div *ngIf="fileAttente.length === 0" class="empty-state">
+        <span style="font-size: 56px;">🎉</span>
+        <h3>File vide !</h3>
+        <p>Aucun client en attente pour le moment</p>
+      </div>
+
+      <!-- Liste -->
+      <div class="queue-list">
+        <div *ngFor="let ticket of fileAttente; let i = index" class="queue-card" [class.first]="i === 0">
+          <div class="queue-number" [class.first]="i === 0">
+            {{ ticket.numero }}
+          </div>
+          <div class="queue-info">
+            <p class="queue-client">Client #{{ ticket.clientId?.slice(0,8) }}</p>
+            <p class="queue-spec">{{ ticket.specialite }}</p>
+            <p class="queue-time">⏱ {{ ticket.tempsAttenteEstime }} min d'attente</p>
+          </div>
+          <div class="queue-right">
+            <span class="rang-badge">Rang {{ ticket.rang }}</span>
+            <span *ngIf="i === 0" class="next-badge">Suivant</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <app-bottom-nav-provider activePage="file"></app-bottom-nav-provider>
+
+  </div>
+</ion-content>

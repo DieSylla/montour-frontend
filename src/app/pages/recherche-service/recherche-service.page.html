@@ -1,0 +1,67 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6">
+      <h2 style="font-size: 20px; font-weight: 700; color: #191c1e; margin-bottom: 6px;">Réserver un RDV</h2>
+      <p style="font-size: 14px; color: #434654; margin-bottom: 20px;">Choisissez un service pour réserver</p>
+
+      <!-- Search -->
+      <div class="search-bar mb-6">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Rechercher un service..."
+          [(ngModel)]="search"/>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters mb-6">
+        <button *ngFor="let cat of categories"
+          (click)="selectCategory(cat)"
+          [class]="selectedCategory === cat.label ? 'filter-active' : 'filter-inactive'">
+          {{ cat.label }}
+        </button>
+      </div>
+
+      <!-- Services -->
+      <div class="services-list">
+        <div *ngFor="let service of filteredServices"
+          class="service-card"
+          (click)="choisirService(service)">
+          <div class="service-image">
+            <span class="service-emoji">{{ service.icon }}</span>
+            <div class="badge-ouvert">Ouvert</div>
+            <div class="confirmation-badge" [style.background]="service.confirmationMode === 'auto' ? '#006c49' : '#1C6E8C'">
+              {{ service.confirmationMode === 'auto' ? 'Confirmation auto' : 'Sur validation' }}
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="service-name">{{ service.nom }}</h4>
+                <p class="service-type">{{ service.type }}</p>
+              </div>
+              <div class="text-right">
+                <p class="attente-value">~15 min</p>
+                <p class="attente-label">d'attente</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty search -->
+        <div *ngIf="filteredServices.length === 0" class="empty-search">
+          <span style="font-size: 48px;">🔍</span>
+          <p>Aucun service trouvé pour "{{ search }}"</p>
+        </div>
+      </div>
+
+    </div>
+
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

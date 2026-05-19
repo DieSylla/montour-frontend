@@ -1,0 +1,57 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] pb-28">
+
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
+    </div>
+
+    <div class="px-6">
+      <h2 style="font-size: 20px; font-weight: 700; color: #191c1e; margin-bottom: 6px;">Mes Rendez-vous</h2>
+      <p style="font-size: 14px; color: #434654; margin-bottom: 24px;">Vos réservations à venir</p>
+
+      <!-- Loading -->
+      <div *ngIf="loading" style="text-align: center; padding: 40px;">
+        <p style="color: #434654;">Chargement...</p>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && reservations.length === 0" class="empty-state">
+        <span style="font-size: 64px; display: block; margin-bottom: 16px;">📅</span>
+        <h3 style="font-size: 18px; font-weight: 700; color: #191c1e; margin-bottom: 8px;">Aucun rendez-vous</h3>
+        <p style="font-size: 14px; color: #434654; margin-bottom: 24px; text-align: center;">Vous n'avez pas encore de rendez-vous. Réservez depuis un service.</p>
+        <button class="rdv-btn" (click)="router.navigate(['/client-home'])">
+          Trouver un service
+        </button>
+      </div>
+
+      <!-- Liste des réservations -->
+      <div *ngIf="!loading && reservations.length > 0" class="reservations-list">
+        <div *ngFor="let rdv of reservations" class="rdv-card" (click)="voirDetail(rdv)">
+          <div class="rdv-icon">📅</div>
+          <div class="rdv-content">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="rdv-title">{{ rdv.specialite || 'Rendez-vous' }}</h3>
+              <span class="rdv-statut" [style.background]="getStatutColor(rdv.statut) + '20'" [style.color]="getStatutColor(rdv.statut)">
+                {{ getStatutLabel(rdv.statut) }}
+              </span>
+            </div>
+            <div class="rdv-meta">
+              <span>
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ rdv.dateHeure?.toDate ? rdv.dateHeure.toDate().toLocaleDateString() : 'Date à confirmer' }}
+              </span>
+              <span>
+                <ion-icon name="time-outline"></ion-icon>
+                {{ rdv.dateHeure?.toDate ? rdv.dateHeure.toDate().toLocaleTimeString() : 'Heure à confirmer' }}
+              </span>
+            </div>
+          </div>
+          <ion-icon name="chevron-forward-outline" style="color: #c3c5d7; font-size: 18px;"></ion-icon>
+        </div>
+      </div>
+
+    </div>
+
+<app-bottom-nav activePage="home"></app-bottom-nav>
+  </div>
+</ion-content>

@@ -1,0 +1,52 @@
+<ion-content>
+  <div class="min-h-screen bg-[#f7f9fb] flex flex-col">
+
+    <!-- Header -->
+<div class="px-6 pt-10">
+<app-montour-header></app-montour-header></div>
+
+    <!-- Content -->
+    <div class="flex flex-col items-center px-6 pt-8">
+
+      <!-- Icon -->
+      <div style="background: #e8f4f8; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+        <span style="font-size: 36px;">✉️</span>
+      </div>
+
+      <h2 style="font-size: 22px; font-weight: 800; color: #191c1e; margin-bottom: 8px;">Vérifiez votre compte</h2>
+      <p style="font-size: 14px; color: #434654; margin-bottom: 32px;">Code envoyé au +221 77 XXX XX XX</p>
+
+      <!-- OTP Dev -->
+      <div *ngIf="otpDev" style="background: #e8f4f8; border-radius: 12px; padding: 10px 20px; margin-bottom: 20px;">
+        <p style="font-size: 13px; color: #434654;">Code (dev) : <strong style="color: #1C6E8C; font-size: 18px;">{{ otpDev }}</strong></p>
+      </div>
+
+      <!-- OTP Display -->
+      <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <div *ngFor="let i of [0,1,2,3,4,5]" class="otp-box">
+          {{ otp[i] || '' }}
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <p style="font-size: 14px; color: #434654; margin-bottom: 32px;">
+        ⏱ Renvoyer le code dans <span style="color: #1C6E8C; font-weight: 700;">{{ timerDisplay }}</span>
+      </p>
+
+      <!-- Verify button -->
+      <button (click)="verify()" class="verify-btn">
+        Vérifier
+      </button>
+
+    </div>
+
+    <!-- Custom Keypad -->
+    <div class="keypad">
+      <div class="keypad-grid">
+        <button class="key" *ngFor="let key of ['1','2','3','4','5','6','7','8','9','0']" (click)="pressKey(key)">{{ key }}</button>
+        <button class="key key-delete" (click)="deleteKey()">⌫</button>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

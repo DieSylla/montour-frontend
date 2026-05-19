@@ -1,0 +1,104 @@
+<ion-content>
+<div class="page-root">
+
+  <!-- ══ VUE CHOIX ══ -->
+  <ng-container *ngIf="vue === 'choix'">
+    <header class="top-bar">
+      <button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <div class="top-info">
+        <h2 class="top-name">{{ prestataire?.prenom }} {{ prestataire?.nom }}</h2>
+        <p class="top-spec">{{ prestataire?.specialite }}</p>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <p class="section-sub">Que souhaitez-vous faire ?</p>
+
+      <div class="choix-card" (click)="prendreTicket()">
+        <div class="choix-icon ticket">
+          <ion-icon name="ticket-outline"></ion-icon>
+        </div>
+        <div class="choix-info">
+          <h3 class="choix-titre">Prendre un ticket maintenant</h3>
+          <p class="choix-desc">Entrez dans la file d'attente immédiatement</p>
+        </div>
+        <div class="choix-spinner" *ngIf="loadingTicket">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="choix-arrow" *ngIf="!loadingTicket"></ion-icon>
+      </div>
+
+      <div class="choix-card" (click)="ouvrirCalendrier()">
+        <div class="choix-icon rdv">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div class="choix-info">
+          <h3 class="choix-titre">Réserver un créneau</h3>
+          <p class="choix-desc">Choisissez une date et une heure à l'avance</p>
+          <p class="choix-dispo" *ngIf="creneaux.length > 0">{{ creneaux.length }} slot(s) disponible(s)</p>
+          <p class="choix-vide" *ngIf="!loading && creneaux.length === 0">Aucun créneau disponible</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="choix-arrow"></ion-icon>
+      </div>
+
+    </div>
+    <app-bottom-nav activePage="home"></app-bottom-nav>
+  </ng-container>
+
+  <!-- ══ VUE CALENDRIER ══ -->
+  <ng-container *ngIf="vue === 'calendrier'">
+    <header class="top-bar">
+      <button class="back-btn" (click)="retourChoix()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h2 class="page-title">Choisir un créneau</h2>
+    </header>
+
+    <div class="content-area">
+
+      <div class="calendar-card">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" (click)="moisPrecedent()">‹</button>
+          <span class="cal-month">{{ moisActuel }}</span>
+          <button class="cal-nav-btn" (click)="moisSuivant()">›</button>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day-label" *ngFor="let j of joursLabels">{{ j }}</div>
+          <div *ngFor="let day of calendarDays"
+            [class]="!day ? 'cal-day empty' :
+                     day.passe ? 'cal-day past' :
+                     selectedDate === day.date ? 'cal-day selected' :
+                     hasCreneaux(day.date) ? 'cal-day has-slots' : 'cal-day'"
+            (click)="day && !day.passe && selectDate(day)">
+            {{ day?.num || '' }}
+          </div>
+        </div>
+        <p class="cal-legend"><span class="dot-green"></span> Créneaux disponibles</p>
+      </div>
+
+      <div *ngIf="selectedDate" class="slots-section">
+        <p class="slots-title">Créneaux du {{ selectedDate }}</p>
+        <div *ngIf="slotsDisponibles.length === 0" class="empty-slots">
+          Aucun créneau disponible ce jour
+        </div>
+        <div class="slots-grid">
+          <div *ngFor="let slot of slotsDisponibles"
+            class="slot-pill"
+            [class.selected]="selectedSlot?.id === slot.id"
+            (click)="selectSlot(slot)">
+            {{ slot.heureDebut }}
+          </div>
+        </div>
+        <button class="confirm-btn" *ngIf="selectedSlot" (click)="continuer()">
+          Confirmer — {{ selectedSlot.heureDebut }}
+        </button>
+      </div>
+
+    </div>
+    <app-bottom-nav activePage="home"></app-bottom-nav>
+  </ng-container>
+
+</div>
+</ion-content>

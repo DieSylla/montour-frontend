@@ -1,0 +1,48 @@
+<ion-content>
+<div class="page-root">
+
+  <header class="top-bar">
+    <button class="back-btn" (click)="goBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h2 class="page-title">{{ service?.nom }}</h2>
+  </header>
+
+  <div class="content-area">
+
+    <div class="etablissement-card">
+      <div class="etab-icon">{{ service?.icon || '🏢' }}</div>
+      <div class="etab-info">
+        <h3 class="etab-nom">{{ service?.nom }}</h3>
+        <p class="etab-categorie">{{ service?.categorie }}</p>
+        <p class="etab-adresse">📍 {{ service?.adresse }}</p>
+      </div>
+    </div>
+
+    <div class="section-title">Choisir un prestataire</div>
+
+    <div *ngIf="loading" class="loading-box">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    <div *ngIf="!loading && prestataires.length === 0" class="empty-box">
+      <p class="empty-icon">👤</p>
+      <p class="empty-title">Aucun prestataire disponible</p>
+    </div>
+
+    <div class="prestataires-list">
+  <div *ngFor="let p of prestataires" class="prestataire-card" (click)="choisirPrestataire(p)">
+    <div class="prest-avatar">{{ p.prenom?.charAt(0) }}{{ p.nom?.charAt(0) }}</div>
+    <div class="prest-info">
+      <p class="prest-nom">{{ p.prenom }} {{ p.nom }}</p>
+      <p class="prest-spec">{{ p.specialite }}</p>
+    </div>
+    <ion-icon name="chevron-forward-outline" class="prest-arrow"></ion-icon>
+  </div>
+</div>
+
+  </div>
+
+  <app-bottom-nav activePage="home"></app-bottom-nav>
+</div>
+</ion-content>
