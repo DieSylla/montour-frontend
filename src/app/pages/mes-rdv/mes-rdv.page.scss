@@ -99,3 +99,30 @@ ion-content { --background: #f4f6f9; }
   font-size: 13px; font-weight: 600; cursor: pointer;
   ion-icon { font-size: 14px; }
 }
+
+.ticket-service-info {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f4f6f9;
+  border-radius: 10px;
+}
+.ticket-service-nom { font-size: 14px; font-weight: 600; color: #191c1e; margin-bottom: 2px; }
+.ticket-service-spec { font-size: 12px; color: #1C6E8C; font-weight: 500; }
+
+.ticket-service-info {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #f4f6f9;
+  border-radius: 10px;
+}
+.ticket-service-nom { 
+  font-size: 14px; 
+  font-weight: 600; 
+  color: #191c1e; 
+  margin-bottom: 4px; 
+}
+.ticket-service-spec { 
+  font-size: 12px; 
+  color: #1C6E8C; 
+  font-weight: 500; 
+}

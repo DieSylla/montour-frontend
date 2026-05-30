@@ -32,6 +32,13 @@
             </span>
           </div>
         </div>
+
+        <!-- Infos service -->
+        <div class="ticket-service-info">
+          <p class="ticket-service-nom">🏥 {{ ticketActif.entrepriseNom || 'Établissement' }}</p>
+          <p class="ticket-service-spec">👤 {{ ticketActif.specialite || '' }}</p>
+        </div>
+
         <div class="ticket-info-row">
           <div class="ticket-info-item">
             <p class="ti-label">Position</p>

@@ -205,3 +205,27 @@ ion-content { --background: #f4f6f9; }
   &.refuse  { background: #fdecea; color: #ba1a1a; }
   &.absent  { background: #fff3e0; color: #C1614F; }
 }
+
+
+.rdv-heure {
+  font-size: 12px;
+  color: #1C6E8C;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rdv-section { margin-bottom: 20px; }
+
+.rdv-section-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 10px;
+  margin-bottom: 10px;
+  &.confirme { background: #e8f5ee; }
+  &.attente  { background: #fff8e7; }
+}
+.rdv-section-icon  { font-size: 16px; }
+.rdv-section-titre { font-size: 14px; font-weight: 700; color: #191c1e; flex: 1; }
+.rdv-section-count {
+  font-size: 12px; font-weight: 700; color: white;
+  background: #1C6E8C; padding: 2px 8px; border-radius: 10px;
+}

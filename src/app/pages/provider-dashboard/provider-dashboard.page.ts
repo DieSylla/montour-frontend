@@ -73,7 +73,7 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
     this.loading = true;
     const today = new Date().toLocaleDateString('fr-FR');
 
-    // Charger tickets
+    // ── Charger tickets ──────────────────────────────────────
     this.api.get<any[]>('tickets/prestataire').subscribe({
       next: (data) => {
         const tous = data || [];
@@ -86,13 +86,15 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
           return (t.statut === 'EN_ATTENTE' || t.statut === 'APPELE') && d === today;
         });
 
-        // Stats
+        // Stat en attente
         this.stats.enAttente = this.tickets.filter(t => t.statut === 'EN_ATTENTE').length;
-        this.stats.traites   = tous.filter(t => {
+
+        // Stat traités — TERMINE + ABSENT du jour
+        this.stats.traites = tous.filter(t => {
           const d = t.createdAt?._seconds
             ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
             : null;
-          return t.statut === 'TERMINE' && d === today;
+          return (t.statut === 'TERMINE' || t.statut === 'ABSENT') && d === today;
         }).length;
 
         this.construireFileUnifiee();
@@ -101,19 +103,29 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
       error: () => { this.tickets = []; this.construireFileUnifiee(); this.loading = false; }
     });
 
-    // Charger RDV
+    // ── Charger RDV ──────────────────────────────────────────
     this.api.get<any[]>('reservations/prestataire').subscribe({
       next: (data) => {
-        this.rdvs = (data || []).filter(r =>
-          r.date === today && (r.statut === 'CONFIRMEE' || r.statut === 'EN_ATTENTE')
-        );
+        const tous = data || [];
+
+        // Comparer les formats de date possibles
+        this.rdvs = tous.filter(r => {
+          const dateRdv = r.date || '';
+          // Format fr-FR : 30/05/2026
+          const todayFR = new Date().toLocaleDateString('fr-FR');
+          // Format ISO : 2026-05-30
+          const todayISO = new Date().toISOString().split('T')[0];
+          return (dateRdv === todayFR || dateRdv === todayISO)
+            && (r.statut === 'CONFIRMEE' || r.statut === 'EN_ATTENTE');
+        });
+
         this.stats.rdvDuJour = this.rdvs.length;
         this.construireFileUnifiee();
       },
       error: () => { this.rdvs = []; this.construireFileUnifiee(); }
     });
 
-    // Notifications non lues
+    // ── Notifications non lues ───────────────────────────────
     this.api.get<any[]>('notifications').subscribe({
       next: (data) => {
         this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length;
@@ -171,7 +183,7 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
       curseurMin += DUREE_MOY;
     });
 
-    // RDV en attente de confirmation (à la fin)
+    // RDV en attente de confirmation
     this.rdvs.filter(r => r.statut === 'EN_ATTENTE').forEach(rdv => {
       const [h, m] = (rdv.heureDebut || '00:00').split(':').map(Number);
       file.push({
@@ -215,7 +227,7 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
   }
 
   getStatutColor(e: ElementFile): string {
-    if (e.statut === 'APPELE')   return '#006c49';
+    if (e.statut === 'APPELE')    return '#006c49';
     if (e.statut === 'CONFIRMEE') return '#006c49';
     if (e.statut === 'EN_ATTENTE') return '#D4A017';
     return '#9fa1b0';

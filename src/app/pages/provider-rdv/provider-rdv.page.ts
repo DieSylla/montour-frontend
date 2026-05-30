@@ -111,14 +111,16 @@ export class ProviderRdvPage implements OnInit {
 
   // ── VOIR CLIENTS D'UN CRÉNEAU ─────────────────────────────────────
   voirClients(creneau: any) {
-    this.creneauSelectionne = creneau;
-    this.vue = 'clients-creneau';
-    this.loadingClients = true;
-    this.api.get<any[]>(`reservations/creneau/${creneau.id}`).subscribe({
-      next: (data) => { this.clientsDuCreneau = data || []; this.loadingClients = false; },
-      error: () => { this.clientsDuCreneau = []; this.loadingClients = false; }
-    });
-  }
+  this.creneauSelectionne = creneau;
+  this.vue = 'clients-creneau';
+  this.loadingClients = true;
+  // Utiliser plageId si disponible, sinon creneauId
+  const id = creneau.id; // id de la plage
+  this.api.get<any[]>(`reservations/plage/${id}`).subscribe({
+    next: (data) => { this.clientsDuCreneau = data || []; this.loadingClients = false; },
+    error: () => { this.clientsDuCreneau = []; this.loadingClients = false; }
+  });
+}
 
   // ── SUPPRESSION CRÉNEAU ───────────────────────────────────────────
   async supprimerCreneau(creneau: any) {
@@ -268,4 +270,12 @@ export class ProviderRdvPage implements OnInit {
     const t = await this.toastCtrl.create({ message, duration: 2500, color, position: 'top' });
     await t.present();
   }
+
+  getConfirmes(): any[] {
+  return this.clientsDuCreneau.filter(r => r.statut === 'CONFIRMEE');
+}
+
+getEnAttente(): any[] {
+  return this.clientsDuCreneau.filter(r => r.statut === 'EN_ATTENTE');
+}
 }

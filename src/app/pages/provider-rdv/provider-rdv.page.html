@@ -38,10 +38,7 @@
         <button class="empty-cta" (click)="ouvrirFormulaire()">+ Ajouter un créneau</button>
       </div>
 
-      <!-- Une carte par date -->
       <div class="date-group" *ngFor="let groupe of creneauxParDate">
-
-        <!-- En-tête de date (cliquable pour déplier) -->
         <div class="date-header" (click)="toggleGroupe(groupe)">
           <div class="date-header-left">
             <span class="date-icon">📅</span>
@@ -54,7 +51,6 @@
           </ion-icon>
         </div>
 
-        <!-- Créneaux de cette date (dépliables) -->
         <div class="creneaux-list" *ngIf="groupe.expanded">
           <div class="creneau-row" *ngFor="let c of groupe.creneaux" (click)="voirClients(c)">
             <div class="creneau-row-left">
@@ -69,7 +65,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -89,7 +84,6 @@
 
       <div class="form-body">
 
-        <!-- Calendrier -->
         <div class="form-section">
           <p class="form-label">Choisir les dates</p>
           <div class="calendar-card">
@@ -112,7 +106,6 @@
           </p>
         </div>
 
-        <!-- Horaires -->
         <div class="form-section">
           <p class="form-label">Horaires</p>
           <div class="horaires-row">
@@ -128,7 +121,6 @@
           </div>
         </div>
 
-        <!-- Durée -->
         <div class="form-section">
           <p class="form-label">Durée par consultation</p>
           <div class="duree-pills">
@@ -166,7 +158,6 @@
         </button>
       </div>
 
-      <!-- Info créneau sélectionné -->
       <div class="creneau-banner" *ngIf="creneauSelectionne">
         <span class="cb-date">📅 {{ creneauSelectionne.date }}</span>
         <span class="cb-heure">{{ creneauSelectionne.heureDebut }} — {{ creneauSelectionne.heureFin }}</span>
@@ -174,6 +165,7 @@
       </div>
 
       <div class="form-body">
+
         <div *ngIf="loadingClients" class="loading-box">
           <ion-spinner name="crescent" color="primary"></ion-spinner>
         </div>
@@ -184,30 +176,61 @@
           <p class="empty-sub">Ce créneau n'a pas encore de clients</p>
         </div>
 
-        <div class="rdv-list">
-          <div *ngFor="let rdv of clientsDuCreneau" class="rdv-card">
-            <div class="rdv-side" [style.background]="getStatutColor(rdv.statut)"></div>
-            <div class="rdv-info">
-              <p class="rdv-client">{{ rdv.clientNom || ('Client #' + rdv.clientId?.slice(0,8)) }}</p>
-              <span class="rdv-badge"
-                [style.color]="getStatutColor(rdv.statut)"
-                [style.background]="getStatutColor(rdv.statut) + '18'">
-                {{ getStatutLabel(rdv.statut) }}
-              </span>
+        <ng-container *ngIf="!loadingClients && clientsDuCreneau.length > 0">
+
+          <!-- ── RDV CONFIRMÉS ── -->
+          <div class="rdv-section" *ngIf="getConfirmes().length > 0">
+            <div class="rdv-section-header confirme">
+              <span class="rdv-section-icon">✅</span>
+              <span class="rdv-section-titre">Confirmés</span>
+              <span class="rdv-section-count">{{ getConfirmes().length }}</span>
             </div>
-            <div class="rdv-actions">
-              <button *ngIf="rdv.statut === 'EN_ATTENTE'" class="action-btn confirm" (click)="valider(rdv)">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-              </button>
-              <button *ngIf="rdv.statut === 'EN_ATTENTE'" class="action-btn refuse" (click)="refuser(rdv)">
-                <ion-icon name="close-circle-outline"></ion-icon>
-              </button>
-              <button *ngIf="rdv.statut === 'CONFIRMEE'" class="action-btn absent" (click)="marquerAbsent(rdv)">
-                <ion-icon name="person-remove-outline"></ion-icon>
-              </button>
+            <div class="rdv-list">
+              <div class="rdv-card" *ngFor="let rdv of getConfirmes()">
+                <div class="rdv-side" style="background:#006c49"></div>
+                <div class="rdv-info">
+                  <p class="rdv-client">{{ rdv.clientNom || ('Client #' + rdv.clientId?.slice(0,8)) }}</p>
+                  <p class="rdv-heure">🕐 {{ rdv.heureDebut }}</p>
+                  <span class="rdv-badge" style="color:#006c49;background:#006c4918">Confirmé</span>
+                </div>
+                <div class="rdv-actions">
+                  <button class="action-btn absent" (click)="marquerAbsent(rdv)">
+                    <ion-icon name="person-remove-outline"></ion-icon>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
+          <!-- ── RDV EN ATTENTE ── -->
+          <div class="rdv-section" *ngIf="getEnAttente().length > 0">
+            <div class="rdv-section-header attente">
+              <span class="rdv-section-icon">⏳</span>
+              <span class="rdv-section-titre">En attente de confirmation</span>
+              <span class="rdv-section-count">{{ getEnAttente().length }}</span>
+            </div>
+            <div class="rdv-list">
+              <div class="rdv-card" *ngFor="let rdv of getEnAttente()">
+                <div class="rdv-side" style="background:#D4A017"></div>
+                <div class="rdv-info">
+                  <p class="rdv-client">{{ rdv.clientNom || ('Client #' + rdv.clientId?.slice(0,8)) }}</p>
+                  <p class="rdv-heure">🕐 {{ rdv.heureDebut }}</p>
+                  <span class="rdv-badge" style="color:#D4A017;background:#D4A01718">En attente</span>
+                </div>
+                <div class="rdv-actions">
+                  <button class="action-btn confirm" (click)="valider(rdv)">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                  </button>
+                  <button class="action-btn refuse" (click)="refuser(rdv)">
+                    <ion-icon name="close-circle-outline"></ion-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+
       </div>
     </div>
   </ng-container>
