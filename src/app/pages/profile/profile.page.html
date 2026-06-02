@@ -1,89 +1,179 @@
+<app-sidebar [role]="getRoleForSidebar()" activePage="profil"></app-sidebar>
 <ion-content>
-  <div class="page-wrapper">
+<div class="page-root">
+<div class="main-content">
 
-    <!-- MonTour Header exact comme la page d'accueil -->
-    <div class="px-4 pt-10">
-      <app-montour-header></app-montour-header>
+  <!-- Header -->
+  <header class="top-bar">
+    <div class="top-left">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
+      </div>
+      <span class="logo-text">MonTour</span>
     </div>
+  </header>
 
-    <!-- Grande carte profil bleue -->
-    <div class="profile-card-wrap">
-      <div class="profile-card">
-        <div class="avatar-wrapper">
-          <div class="avatar-circle">
-            <span class="avatar-initials">{{ user?.prenom?.charAt(0) }}{{ user?.nom?.charAt(0) }}</span>
+  <!-- Hero -->
+  <div class="hero-section">
+    <div class="avatar-circle">
+      <span class="avatar-initials">{{ getInitiales() }}</span>
+    </div>
+    <h2 class="profile-name">{{ user?.prenom }} {{ user?.nom }}</h2>
+    <span class="profile-badge">{{ getRoleLabel() }}</span>
+    <p class="profile-email">{{ user?.email }}</p>
+  </div>
+
+  <div class="content-area">
+
+    <!-- VUE NORMALE -->
+    <ng-container *ngIf="!editMode && !pwdMode">
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-label">Prénom</span>
+          <span class="info-value">{{ user?.prenom }}</span>
+        </div>
+        <div class="info-divider"></div>
+        <div class="info-row">
+          <span class="info-label">Nom</span>
+          <span class="info-value">{{ user?.nom }}</span>
+        </div>
+        <div class="info-divider"></div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ user?.email }}</span>
+        </div>
+        <div class="info-divider"></div>
+        <div class="info-row" *ngIf="user?.telephone">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value">{{ user?.telephone }}</span>
+        </div>
+        <ng-container *ngIf="isPrestataire()">
+          <div class="info-divider"></div>
+          <div class="info-row">
+            <span class="info-label">Spécialité</span>
+            <span class="info-value">{{ user?.specialite || '—' }}</span>
           </div>
-          
-        </div>
-        <h1 class="profile-name">{{ user?.prenom }} {{ user?.nom }}</h1>
-        <div class="profile-badge">
-          {{ getRoleLabel() | uppercase }}
-        </div>
+          <div class="info-divider"></div>
+          <div class="info-row" *ngIf="user?.entrepriseNom">
+            <span class="info-label">Établissement</span>
+            <span class="info-value">{{ user?.entrepriseNom }}</span>
+          </div>
+          <div class="info-divider"></div>
+          <div class="info-row">
+            <span class="info-label">Confirmation RDV</span>
+            <span class="info-value">{{ user?.confirmationMode === 'auto' ? 'Automatique' : 'Manuelle' }}</span>
+          </div>
+        </ng-container>
       </div>
-    </div>
 
-    <!-- Menu Items -->
-    <div class="menu-list">
-
-      <div class="menu-item" (click)="goTo('info')">
-        <div class="menu-icon-wrap" style="background: #e8f4f8;">
-          <ion-icon name="person-outline" style="color: #1C6E8C;"></ion-icon>
+      <div class="menu-item" (click)="ouvrirEdit()">
+        <div class="menu-icon" style="background:#e8f3f7;">
+          <ion-icon name="create-outline" style="color:#1C6E8C;"></ion-icon>
         </div>
         <div class="menu-content">
-          <p class="menu-title">Informations personnelles</p>
-          <p class="menu-subtitle">Gérer votre identité et vos coordonnées</p>
+          <p class="menu-title">Modifier mes informations</p>
+          <p class="menu-sub">Nom, prénom, téléphone</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
       </div>
 
-      <div class="menu-item" (click)="goTo('notifications')">
-        <div class="menu-icon-wrap" style="background: #fff8e8;">
-          <ion-icon name="notifications-outline" style="color: #D4A017;"></ion-icon>
+      <div class="menu-item" (click)="ouvrirPwd()">
+        <div class="menu-icon" style="background:#fdecea;">
+          <ion-icon name="lock-closed-outline" style="color:#ba1a1a;"></ion-icon>
         </div>
         <div class="menu-content">
-          <p class="menu-title">Paramètres de notification</p>
-          <p class="menu-subtitle">Alertes de file d'attente et SMS</p>
+          <p class="menu-title">Changer le mot de passe</p>
+          <p class="menu-sub">Sécurisez votre compte</p>
         </div>
         <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
       </div>
 
-      <div class="menu-item" (click)="goTo('security')">
-        <div class="menu-icon-wrap" style="background: #ffeaea;">
-          <ion-icon name="shield-outline" style="color: #ba1a1a;"></ion-icon>
-        </div>
-        <div class="menu-content">
-          <p class="menu-title">Sécurité</p>
-          <p class="menu-subtitle">Mot de passe et authentification</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
-      </div>
-
-      <div class="menu-item" (click)="goTo('support')">
-        <div class="menu-icon-wrap" style="background: #f0f0f0;">
-          <ion-icon name="help-circle-outline" style="color: #434654;"></ion-icon>
-        </div>
-        <div class="menu-content">
-          <p class="menu-title">Aide & Support</p>
-          <p class="menu-subtitle">Centre d'aide et contact client</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
-      </div>
-
-    </div>
-
-    <!-- Logout -->
-    <div class="logout-wrap">
       <button class="logout-btn" (click)="logout()">
         <ion-icon name="log-out-outline"></ion-icon>
-        DÉCONNEXION
+        Se déconnecter
       </button>
-    </div>
 
-    <!-- Version -->
-    <p class="version-text">VERSION 2.4.0 • MONTOUR SÉNÉGAL</p>
+      <p class="version-text">MonTour v1.0 — Sénégal</p>
+    </ng-container>
 
-    <!-- Bottom Nav -->
-<app-bottom-nav *ngIf="isClient()" activePage="profile"></app-bottom-nav>
-<app-bottom-nav-provider *ngIf="isPrestataire()" activePage="profil"></app-bottom-nav-provider>
+    <!-- MODE ÉDITION -->
+    <ng-container *ngIf="editMode">
+      <div class="form-header">
+        <h3 class="form-title">Modifier mes informations</h3>
+        <button class="cancel-btn" (click)="annulerEdit()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+      <div class="form-card">
+        <div class="field">
+          <label class="field-label">Prénom</label>
+          <input class="field-input" type="text" [(ngModel)]="form.prenom" placeholder="Votre prénom"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Nom</label>
+          <input class="field-input" type="text" [(ngModel)]="form.nom" placeholder="Votre nom"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Téléphone</label>
+          <input class="field-input" type="tel" [(ngModel)]="form.telephone" placeholder="77 000 00 00"/>
+        </div>
+        <ng-container *ngIf="isPrestataire()">
+          <div class="field">
+            <label class="field-label">Spécialité</label>
+            <input class="field-input" type="text" [(ngModel)]="form.specialite" placeholder="Ex: Cardiologie"/>
+          </div>
+          <div class="field">
+            <label class="field-label">Mode de confirmation RDV</label>
+            <div class="toggle-row">
+              <button [class]="form.confirmationMode === 'auto' ? 'toggle-btn active' : 'toggle-btn'"
+                (click)="form.confirmationMode = 'auto'">Automatique</button>
+              <button [class]="form.confirmationMode === 'manual' ? 'toggle-btn active' : 'toggle-btn'"
+                (click)="form.confirmationMode = 'manual'">Manuelle</button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <button class="save-btn" (click)="sauvegarder()" [disabled]="loading">
+        <ion-spinner name="crescent" *ngIf="loading" style="width:18px;height:18px;"></ion-spinner>
+        <ion-icon name="checkmark-outline" *ngIf="!loading"></ion-icon>
+        {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+      </button>
+    </ng-container>
+
+    <!-- MODE MOT DE PASSE -->
+    <ng-container *ngIf="pwdMode">
+      <div class="form-header">
+        <h3 class="form-title">Changer le mot de passe</h3>
+        <button class="cancel-btn" (click)="annulerPwd()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+      <div class="form-card">
+        <div class="field">
+          <label class="field-label">Ancien mot de passe</label>
+          <input class="field-input" type="password" [(ngModel)]="pwd.ancien" placeholder="••••••••"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Nouveau mot de passe</label>
+          <input class="field-input" type="password" [(ngModel)]="pwd.nouveau" placeholder="••••••••"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Confirmer le mot de passe</label>
+          <input class="field-input" type="password" [(ngModel)]="pwd.confirm" placeholder="••••••••"/>
+        </div>
+      </div>
+      <button class="save-btn" (click)="changerMotDePasse()" [disabled]="loadingPwd">
+        <ion-spinner name="crescent" *ngIf="loadingPwd" style="width:18px;height:18px;"></ion-spinner>
+        <ion-icon name="checkmark-outline" *ngIf="!loadingPwd"></ion-icon>
+        {{ loadingPwd ? 'Modification...' : 'Modifier' }}
+      </button>
+    </ng-container>
+
   </div>
+
+  <app-bottom-nav *ngIf="isClient()" activePage="profil"></app-bottom-nav>
+  <app-bottom-nav-provider *ngIf="isPrestataire()" activePage="profil"></app-bottom-nav-provider>
+
+</div>
+</div>
 </ion-content>

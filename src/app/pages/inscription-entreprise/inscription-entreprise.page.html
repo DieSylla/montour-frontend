@@ -1,0 +1,106 @@
+<ion-content>
+<div class="page-root">
+
+  <!-- Header -->
+  <header class="top-bar">
+    <button class="back-btn" (click)="router.navigate(['/login'])">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h2 class="top-title">Rejoindre MonTour</h2>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero-section">
+    <p class="hero-sub">Votre établissement n'est pas encore sur MonTour ?</p>
+    <h2 class="hero-title">Soumettez votre demande d'adhésion</h2>
+    <p class="hero-desc">Notre équipe examinera votre dossier et vous enverra votre code d'accès sous 48h.</p>
+  </div>
+
+  <div class="content-area">
+
+    <!-- Infos établissement -->
+    <p class="section-title">Informations de l'établissement</p>
+    <div class="form-card">
+      <div class="field">
+        <label class="field-label">Nom de l'établissement *</label>
+        <input class="field-input" type="text" [(ngModel)]="form.nom" placeholder="Ex: Clinique Pasteur Dakar"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Nom du responsable *</label>
+        <input class="field-input" type="text" [(ngModel)]="form.nomResponsable" placeholder="Prénom et nom"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Type de service *</label>
+        <div class="type-pills">
+          <button *ngFor="let t of typesService"
+            [class]="form.typeService === t ? 'type-pill active' : 'type-pill'"
+            (click)="form.typeService = t">
+            {{ t }}
+          </button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">NINEA *</label>
+        <input class="field-input" type="text" [(ngModel)]="form.ninea" placeholder="Ex: 001234567"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Adresse *</label>
+        <input class="field-input" type="text" [(ngModel)]="form.adresse" placeholder="Ex: Route de Rufisque, Dakar"/>
+      </div>
+    </div>
+
+    <!-- Spécialités -->
+    <p class="section-title">Spécialités proposées</p>
+    <div class="form-card">
+      <div class="field">
+        <label class="field-label">Ajouter une spécialité</label>
+        <div class="specialite-row">
+          <input class="field-input" type="text"
+            [(ngModel)]="nouvelleSpecialite"
+            placeholder="Ex: Cardiologie"
+            (keyup.enter)="ajouterSpecialite()"/>
+          <button class="add-spec-btn" (click)="ajouterSpecialite()">
+            <ion-icon name="add-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <div class="specialites-list" *ngIf="form.specialites.length > 0">
+        <div *ngFor="let s of form.specialites; let i = index" class="spec-chip">
+          <span>{{ s }}</span>
+          <button (click)="supprimerSpecialite(i)">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <p class="empty-spec" *ngIf="form.specialites.length === 0">
+        Aucune spécialité ajoutée
+      </p>
+    </div>
+
+    <!-- Contact -->
+    <p class="section-title">Coordonnées de contact</p>
+    <div class="form-card">
+      <div class="field">
+        <label class="field-label">Email *</label>
+        <input class="field-input" type="email" [(ngModel)]="form.email" placeholder="contact@etablissement.sn"/>
+      </div>
+      <div class="field">
+        <label class="field-label">Téléphone *</label>
+        <input class="field-input" type="tel" [(ngModel)]="form.telephone" placeholder="77 000 00 00"/>
+      </div>
+    </div>
+
+    <!-- Bouton soumettre -->
+    <button class="submit-btn" (click)="soumettre()" [disabled]="loading">
+      <ion-spinner name="crescent" *ngIf="loading" style="width:18px;height:18px;"></ion-spinner>
+      <ion-icon name="checkmark-outline" *ngIf="!loading"></ion-icon>
+      {{ loading ? 'Envoi en cours...' : 'Soumettre la demande' }}
+    </button>
+
+    <p class="info-text">
+      Après validation, vous recevrez un code d'accès pour inscrire vos prestataires sur MonTour.
+    </p>
+
+  </div>
+</div>
+</ion-content>

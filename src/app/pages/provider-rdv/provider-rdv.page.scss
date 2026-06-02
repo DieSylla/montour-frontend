@@ -229,3 +229,36 @@ ion-content { --background: #f4f6f9; }
   font-size: 12px; font-weight: 700; color: white;
   background: #1C6E8C; padding: 2px 8px; border-radius: 10px;
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 1024px) {
+  :host {
+    display: flex !important;
+    flex-direction: row !important;
+    height: 100vh;
+  }
+
+  ion-content {
+    flex: 1;
+    margin-left: 220px;
+  }
+
+  .page-root {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
+/* ── RESPONSIVE DESKTOP ── */
+@media (min-width: 1024px) {
+  :host {
+    display: block !important;
+  }
+
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+  }
+}

@@ -115,6 +115,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin-users/admin-users.page').then(m => m.AdminUsersPage),
   },
 
+  { path: 'inscription-entreprise', loadComponent: () => import('./pages/inscription-entreprise/inscription-entreprise.page').then(m => m.InscriptionEntreprisePage) },
+
   // ── Fallback ─────────────────────────────────────────────────────────
   { path: '**', redirectTo: 'login' },
 ];

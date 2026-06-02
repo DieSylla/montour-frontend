@@ -1,14 +1,17 @@
+<app-sidebar role="CLIENT" activePage="rdv"></app-sidebar>
+
 <ion-content>
 <div class="page-root">
+<div class="main-content">
 
   <header class="top-bar">
-  <div class="top-left">
-    <div class="logo-icon">
-      <span class="material-symbols-outlined">confirmation_number</span>
+    <div class="top-left">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
+      </div>
+      <span class="logo-text">MonTour</span>
     </div>
-    <span class="logo-text">MonTour</span>
-  </div>
-</header>
+  </header>
 
   <div class="content-area">
 
@@ -32,13 +35,10 @@
             </span>
           </div>
         </div>
-
-        <!-- Infos service -->
         <div class="ticket-service-info">
           <p class="ticket-service-nom">🏥 {{ ticketActif.entrepriseNom || 'Établissement' }}</p>
           <p class="ticket-service-spec">👤 {{ ticketActif.specialite || '' }}</p>
         </div>
-
         <div class="ticket-info-row">
           <div class="ticket-info-item">
             <p class="ti-label">Position</p>
@@ -68,10 +68,7 @@
 
     <div class="rdv-list">
       <div *ngFor="let rdv of reservations" class="rdv-card">
-
-        <!-- Badge aujourd'hui -->
         <div class="today-badge" *ngIf="estAujourdhui(rdv.date)">Aujourd'hui</div>
-
         <div class="rdv-header">
           <div class="rdv-header-left">
             <p class="rdv-etablissement">{{ rdv.etablissementNom }}</p>
@@ -84,7 +81,6 @@
             {{ getStatutLabel(rdv.statut) }}
           </span>
         </div>
-
         <div class="rdv-footer">
           <div class="rdv-datetime">
             <span class="rdv-date-val">📅 {{ rdv.date }}</span>
@@ -95,12 +91,13 @@
             Annuler
           </button>
         </div>
-
       </div>
     </div>
 
   </div>
 
   <app-bottom-nav activePage="rdv"></app-bottom-nav>
+
+</div>
 </div>
 </ion-content>

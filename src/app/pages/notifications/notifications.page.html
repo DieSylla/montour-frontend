@@ -1,9 +1,13 @@
+<app-sidebar role="PRESTATAIRE" activePage="notifications"></app-sidebar>
+
 <ion-content>
 <div class="page-root">
+<div class="main-content">
 
   <!-- HEADER -->
   <header class="top-bar">
-  <button class="back-btn" (click)="location.back()">      <ion-icon name="arrow-back-outline"></ion-icon>
+    <button class="back-btn" (click)="location.back()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
     <span class="page-title">Notifications</span>
     <button class="mark-all-btn" (click)="marquerToutLu()" *ngIf="nonLues > 0">
@@ -19,46 +23,35 @@
 
   <div class="content-area">
 
-    <!-- LOADING -->
     <div *ngIf="loading" class="loading-box">
       <ion-spinner name="crescent" color="primary"></ion-spinner>
     </div>
 
-    <!-- VIDE -->
     <div *ngIf="!loading && notifications.length === 0" class="empty-box">
       <div class="empty-icon">🔔</div>
       <p class="empty-title">Aucune notification</p>
       <p class="empty-sub">Vos notifications apparaîtront ici</p>
     </div>
 
-    <!-- LISTE -->
     <div class="notif-list">
       <div *ngFor="let notif of notifications"
         class="notif-card"
         [class.unread]="!notif.lu"
         (click)="marquerLu(notif)">
-
-        <!-- Icône -->
-        <div class="notif-icon-box"
-          [style.background]="getIconBg(notif.type)">
-          <ion-icon [name]="getIcon(notif.type)"
-            [style.color]="getIconColor(notif.type)">
-          </ion-icon>
+        <div class="notif-icon-box" [style.background]="getIconBg(notif.type)">
+          <ion-icon [name]="getIcon(notif.type)" [style.color]="getIconColor(notif.type)"></ion-icon>
         </div>
-
-        <!-- Contenu -->
         <div class="notif-content">
           <p class="notif-titre">{{ notif.titre }}</p>
           <p class="notif-message">{{ notif.message }}</p>
           <span class="notif-time">{{ formatDate(notif.createdAt) }}</span>
         </div>
-
-        <!-- Point non lu -->
         <div class="unread-dot" *ngIf="!notif.lu"></div>
-
       </div>
     </div>
 
   </div>
+
+</div>
 </div>
 </ion-content>

@@ -1,13 +1,103 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>admin-entreprises</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-sidebar role="ADMIN" activePage="entreprises"></app-sidebar>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">admin-entreprises</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+<div class="page-root">
+<div class="main-content">
+
+  <!-- Header -->
+  <header class="top-bar">
+    <button class="back-btn" (click)="router.navigate(['/admin-dashboard'])">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h2 class="top-title">Entreprises</h2>
+    <span class="top-count">{{ entreprises.length }}</span>
+  </header>
+
+  <div class="content-area">
+
+    <!-- Recherche -->
+    <div class="search-box">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Rechercher une entreprise..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="appliquerFiltres()"/>
+    </div>
+
+    <!-- Filtres statut -->
+    <div class="filtres-row">
+      <button [class]="filtreStatut === 'TOUS' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreStatut('TOUS')">Toutes</button>
+      <button [class]="filtreStatut === 'VALIDEE' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreStatut('VALIDEE')">Validées</button>
+      <button [class]="filtreStatut === 'EN_ATTENTE' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreStatut('EN_ATTENTE')">En attente</button>
+      <button [class]="filtreStatut === 'REJETEE' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreStatut('REJETEE')">Rejetées</button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-box">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    <!-- Liste -->
+    <div class="entreprises-list" *ngIf="!loading">
+
+      <div *ngIf="filteredEntreprises.length === 0" class="empty-box">
+        <div class="empty-icon">🏢</div>
+        <p class="empty-title">Aucune entreprise trouvée</p>
+      </div>
+
+      <div *ngFor="let e of filteredEntreprises" class="entreprise-card">
+
+        <div class="entreprise-header">
+          <div class="entreprise-avatar">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <div class="entreprise-title-block">
+            <h3 class="entreprise-nom">{{ e.nom }}</h3>
+            <p class="entreprise-type">{{ e.typeService || e.categorie }}</p>
+          </div>
+          <span class="statut-badge"
+            [style.color]="getStatutColor(e.statut)"
+            [style.background]="getStatutColor(e.statut) + '18'">
+            {{ getStatutLabel(e.statut) }}
+          </span>
+        </div>
+
+        <div class="entreprise-details">
+          <p class="detail-row">
+            <ion-icon name="mail-outline"></ion-icon> {{ e.email }}
+          </p>
+          <p class="detail-row" *ngIf="e.telephone">
+            <ion-icon name="call-outline"></ion-icon> {{ e.telephone }}
+          </p>
+          <p class="detail-row" *ngIf="e.ninea">
+            <ion-icon name="card-outline"></ion-icon> NINEA : {{ e.ninea }}
+          </p>
+          <p class="detail-row" *ngIf="e.adresse">
+            <ion-icon name="location-outline"></ion-icon> {{ e.adresse }}
+          </p>
+        </div>
+
+        <!-- Actions pour entreprises en attente -->
+        <div class="entreprise-actions" *ngIf="e.statut === 'EN_ATTENTE'">
+          <button class="btn-valider" (click)="valider(e)">
+            <ion-icon name="checkmark-outline"></ion-icon> Valider
+          </button>
+          <button class="btn-rejeter" (click)="rejeter(e)">
+            <ion-icon name="close-outline"></ion-icon> Rejeter
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
 </ion-content>

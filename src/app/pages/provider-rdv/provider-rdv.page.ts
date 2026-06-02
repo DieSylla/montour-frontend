@@ -15,6 +15,7 @@ import {
 import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 type Vue = 'liste' | 'form' | 'clients-creneau';
 
@@ -24,7 +25,7 @@ type Vue = 'liste' | 'form' | 'clients-creneau';
   styleUrls: ['./provider-rdv.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner,
-    BottomNavProviderComponent],
+    BottomNavProviderComponent,CommonModule,SidebarComponent],
 })
 export class ProviderRdvPage implements OnInit {
   user: any = null;

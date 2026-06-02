@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
 import { Subscription, interval } from 'rxjs';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+
 
 interface ElementFile {
   id: string;
@@ -26,7 +28,7 @@ interface ElementFile {
   templateUrl: './provider-dashboard.page.html',
   styleUrls: ['./provider-dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavProviderComponent],
+  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavProviderComponent,SidebarComponent],
 })
 export class ProviderDashboardPage implements OnInit, OnDestroy {
   user: any = null;
@@ -70,69 +72,79 @@ export class ProviderDashboardPage implements OnInit, OnDestroy {
   stopPolling() { this.polling?.unsubscribe(); this.polling = null; }
 
   loadData() {
-    this.loading = true;
-    const today = new Date().toLocaleDateString('fr-FR');
+  this.loading = true;
+  const today = new Date().toLocaleDateString('fr-FR');
 
-    // ── Charger tickets ──────────────────────────────────────
-    this.api.get<any[]>('tickets/prestataire').subscribe({
-      next: (data) => {
-        const tous = data || [];
+  // Charger tickets
+  this.api.get<any[]>('tickets/prestataire').subscribe({
+    next: (data) => {
+      const tous = data || [];
 
-        // Tickets actifs du jour (EN_ATTENTE ou APPELE)
-        this.tickets = tous.filter(t => {
-          const d = t.createdAt?._seconds
-            ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
-            : null;
-          return (t.statut === 'EN_ATTENTE' || t.statut === 'APPELE') && d === today;
-        });
+      // Clients en attente = tickets EN_ATTENTE du jour
+      const ticketsEnAttente = tous.filter(t => {
+        const d = t.createdAt?._seconds
+          ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
+          : null;
+        return t.statut === 'EN_ATTENTE' && d === today;
+      });
 
-        // Stat en attente
-        this.stats.enAttente = this.tickets.filter(t => t.statut === 'EN_ATTENTE').length;
+      // Traités = TERMINE + ABSENT du jour
+      this.stats.traites = tous.filter(t => {
+        const d = t.createdAt?._seconds
+          ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
+          : null;
+        return (t.statut === 'TERMINE' || t.statut === 'ABSENT') && d === today;
+      }).length;
 
-        // Stat traités — TERMINE + ABSENT du jour
-        this.stats.traites = tous.filter(t => {
-          const d = t.createdAt?._seconds
-            ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
-            : null;
-          return (t.statut === 'TERMINE' || t.statut === 'ABSENT') && d === today;
-        }).length;
+      this.tickets = tous.filter(t => {
+        const d = t.createdAt?._seconds
+          ? new Date(t.createdAt._seconds * 1000).toLocaleDateString('fr-FR')
+          : null;
+        return (t.statut === 'EN_ATTENTE' || t.statut === 'APPELE') && d === today;
+      });
 
-        this.construireFileUnifiee();
-        this.loading = false;
-      },
-      error: () => { this.tickets = []; this.construireFileUnifiee(); this.loading = false; }
-    });
+      // Stats en attente = tickets EN_ATTENTE + RDV CONFIRMÉS (calculé après chargement RDV)
+      this.stats.enAttente = ticketsEnAttente.length;
 
-    // ── Charger RDV ──────────────────────────────────────────
-    this.api.get<any[]>('reservations/prestataire').subscribe({
-      next: (data) => {
-        const tous = data || [];
+      this.construireFileUnifiee();
+      this.loading = false;
+    },
+    error: () => { this.tickets = []; this.construireFileUnifiee(); this.loading = false; }
+  });
 
-        // Comparer les formats de date possibles
-        this.rdvs = tous.filter(r => {
-          const dateRdv = r.date || '';
-          // Format fr-FR : 30/05/2026
-          const todayFR = new Date().toLocaleDateString('fr-FR');
-          // Format ISO : 2026-05-30
-          const todayISO = new Date().toISOString().split('T')[0];
-          return (dateRdv === todayFR || dateRdv === todayISO)
-            && (r.statut === 'CONFIRMEE' || r.statut === 'EN_ATTENTE');
-        });
+  // Charger RDV
+  this.api.get<any[]>('reservations/prestataire').subscribe({
+    next: (data) => {
+      const tous = data || [];
+      const todayFR = new Date().toLocaleDateString('fr-FR');
+      const todayISO = new Date().toISOString().split('T')[0];
 
-        this.stats.rdvDuJour = this.rdvs.length;
-        this.construireFileUnifiee();
-      },
-      error: () => { this.rdvs = []; this.construireFileUnifiee(); }
-    });
+      this.rdvs = tous.filter(r => {
+        const dateRdv = r.date || '';
+        return (dateRdv === todayFR || dateRdv === todayISO)
+          && (r.statut === 'CONFIRMEE' || r.statut === 'EN_ATTENTE');
+      });
 
-    // ── Notifications non lues ───────────────────────────────
-    this.api.get<any[]>('notifications').subscribe({
-      next: (data) => {
-        this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length;
-      },
-      error: () => { this.nbNotifNonLues = 0; }
-    });
-  }
+      // RDV confirmés du jour s'ajoutent aux clients en attente
+      const rdvConfirmes = this.rdvs.filter(r => r.statut === 'CONFIRMEE').length;
+      this.stats.enAttente += rdvConfirmes;
+
+      // RDV à confirmer (mode manuel)
+      this.stats.rdvDuJour = this.rdvs.filter(r => r.statut === 'EN_ATTENTE').length;
+
+      this.construireFileUnifiee();
+    },
+    error: () => { this.rdvs = []; this.construireFileUnifiee(); }
+  });
+
+  // Notifications
+  this.api.get<any[]>('notifications').subscribe({
+    next: (data) => {
+      this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length;
+    },
+    error: () => { this.nbNotifNonLues = 0; }
+  });
+}
 
   construireFileUnifiee() {
     const now = new Date();

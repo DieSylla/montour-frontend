@@ -8,13 +8,15 @@ import { TicketService } from '../../services/ticket';
 import { AuthService } from '../../services/auth';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+
 
 @Component({
   selector: 'app-active-ticket',
   templateUrl: './active-ticket.page.html',
   styleUrls: ['./active-ticket.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
+  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent,SidebarComponent],
 })
 export class ActiveTicketPage implements OnInit {
   ticket: any = null;

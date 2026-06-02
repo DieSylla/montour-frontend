@@ -1,5 +1,8 @@
+<app-sidebar role="PRESTATAIRE" activePage="home"></app-sidebar>
+
 <ion-content>
 <div class="page-root">
+<div class="main-content">
 
   <header class="top-bar">
     <div class="top-bar-left">
@@ -19,7 +22,9 @@
     <h2 class="hero-etablissement">{{ entrepriseNom || 'Mon établissement' }}</h2>
     <div class="stats-row">
       <div class="stat-card">
-        <span class="stat-val" [style.color]="stats.enAttente > 0 ? '#1C6E8C' : '#191c1e'">{{ stats.enAttente }}</span>
+        <span class="stat-val" [style.color]="stats.enAttente > 0 ? '#1C6E8C' : '#191c1e'">
+          {{ stats.enAttente }}
+        </span>
         <span class="stat-lbl">En attente</span>
       </div>
       <div class="stat-card">
@@ -27,8 +32,10 @@
         <span class="stat-lbl">Traités</span>
       </div>
       <div class="stat-card">
-        <span class="stat-val" [style.color]="stats.rdvDuJour > 0 ? '#006c49' : '#191c1e'">{{ stats.rdvDuJour }}</span>
-        <span class="stat-lbl">RDV aujourd'hui</span>
+        <span class="stat-val" [style.color]="stats.rdvDuJour > 0 ? '#D4A017' : '#191c1e'">
+          {{ stats.rdvDuJour }}
+        </span>
+        <span class="stat-lbl">RDV à confirmer</span>
       </div>
     </div>
   </div>
@@ -89,6 +96,16 @@
       </div>
     </div>
 
+    <!-- Alerte RDV à confirmer -->
+    <div class="alert-rdv" *ngIf="stats.rdvDuJour > 0" (click)="router.navigate(['/provider-rdv'])">
+      <span class="alert-rdv-icon">⚠️</span>
+      <div class="alert-rdv-info">
+        <p class="alert-rdv-title">{{ stats.rdvDuJour }} RDV en attente de confirmation</p>
+        <p class="alert-rdv-sub">Cliquez pour confirmer ou refuser</p>
+      </div>
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </div>
+
     <div class="legende" *ngIf="fileUnifiee.length > 0">
       <div class="legende-item">
         <div class="legende-dot" style="background:#1C6E8C"></div>
@@ -103,5 +120,7 @@
   </div>
 
   <app-bottom-nav-provider activePage="home"></app-bottom-nav-provider>
+
+</div>
 </div>
 </ion-content>

@@ -20,7 +20,7 @@ export class LoginPage {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
+    public router: Router,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController
   ) {}

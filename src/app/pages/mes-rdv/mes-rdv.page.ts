@@ -8,13 +8,15 @@ import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 import { Subscription, interval } from 'rxjs';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+
 
 @Component({
   selector: 'app-mes-rdv',
   templateUrl: './mes-rdv.page.html',
   styleUrls: ['./mes-rdv.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
+  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent,SidebarComponent],
 })
 export class MesRdvPage implements OnInit, OnDestroy {
   user: any = null;

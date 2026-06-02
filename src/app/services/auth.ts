@@ -44,7 +44,11 @@ export class AuthService {
   }
 
   getRole(): string {
-  const user = this.getUser();
-  return user?.role || 'CLIENT';
-}
+    const user = this.getUser();
+    return user?.role || 'CLIENT';
+  }
+
+  updateUser(user: any) {
+    localStorage.setItem('current_user', JSON.stringify(user));
+  }
 }

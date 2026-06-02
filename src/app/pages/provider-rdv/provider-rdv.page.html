@@ -1,5 +1,8 @@
+<app-sidebar role="PRESTATAIRE" activePage="rdv"></app-sidebar>
+
 <ion-content>
 <div class="page-root">
+<div class="main-content">
 
   <!-- ══════════════════ VUE LISTE ══════════════════ -->
   <ng-container *ngIf="vue === 'liste'">
@@ -74,16 +77,13 @@
   <!-- ══════════════════ VUE FORMULAIRE ══════════════════ -->
   <ng-container *ngIf="vue === 'form'">
     <div class="form-page">
-
       <div class="form-topbar">
         <button class="back-btn" (click)="retourListe()">
           <ion-icon name="arrow-back-outline"></ion-icon>
         </button>
         <h2 class="form-title">Nouveau créneau</h2>
       </div>
-
       <div class="form-body">
-
         <div class="form-section">
           <p class="form-label">Choisir les dates</p>
           <div class="calendar-card">
@@ -105,7 +105,6 @@
             ✅ {{ nouveauCreneau.dates.length }} date(s) sélectionnée(s)
           </p>
         </div>
-
         <div class="form-section">
           <p class="form-label">Horaires</p>
           <div class="horaires-row">
@@ -120,7 +119,6 @@
             </div>
           </div>
         </div>
-
         <div class="form-section">
           <p class="form-label">Durée par consultation</p>
           <div class="duree-pills">
@@ -134,12 +132,10 @@
             📊 Capacité : <strong>{{ calculerCapacite() }} client(s)</strong> par session
           </div>
         </div>
-
         <button class="save-btn" (click)="ajouterCreneau()">
           <ion-icon name="checkmark-outline"></ion-icon>
           Créer ce créneau
         </button>
-
       </div>
     </div>
   </ng-container>
@@ -147,7 +143,6 @@
   <!-- ══════════════════ VUE CLIENTS D'UN CRÉNEAU ══════════════════ -->
   <ng-container *ngIf="vue === 'clients-creneau'">
     <div class="form-page">
-
       <div class="form-topbar">
         <button class="back-btn" (click)="retourListe()">
           <ion-icon name="arrow-back-outline"></ion-icon>
@@ -157,28 +152,21 @@
           <ion-icon name="trash-outline"></ion-icon>
         </button>
       </div>
-
       <div class="creneau-banner" *ngIf="creneauSelectionne">
         <span class="cb-date">📅 {{ creneauSelectionne.date }}</span>
         <span class="cb-heure">{{ creneauSelectionne.heureDebut }} — {{ creneauSelectionne.heureFin }}</span>
         <span class="cb-duree">{{ creneauSelectionne.dureePrestation }} min/client</span>
       </div>
-
       <div class="form-body">
-
         <div *ngIf="loadingClients" class="loading-box">
           <ion-spinner name="crescent" color="primary"></ion-spinner>
         </div>
-
         <div *ngIf="!loadingClients && clientsDuCreneau.length === 0" class="empty-box">
           <div class="empty-icon">👥</div>
           <p class="empty-title">Aucune réservation</p>
           <p class="empty-sub">Ce créneau n'a pas encore de clients</p>
         </div>
-
         <ng-container *ngIf="!loadingClients && clientsDuCreneau.length > 0">
-
-          <!-- ── RDV CONFIRMÉS ── -->
           <div class="rdv-section" *ngIf="getConfirmes().length > 0">
             <div class="rdv-section-header confirme">
               <span class="rdv-section-icon">✅</span>
@@ -201,8 +189,6 @@
               </div>
             </div>
           </div>
-
-          <!-- ── RDV EN ATTENTE ── -->
           <div class="rdv-section" *ngIf="getEnAttente().length > 0">
             <div class="rdv-section-header attente">
               <span class="rdv-section-icon">⏳</span>
@@ -228,12 +214,11 @@
               </div>
             </div>
           </div>
-
         </ng-container>
-
       </div>
     </div>
   </ng-container>
 
+</div>
 </div>
 </ion-content>

@@ -120,3 +120,19 @@ ion-content { --background: #f7f9fb; }
   cursor: pointer;
   text-align: center;
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 768px) {
+  :host {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .page-root,
+  .min-h-screen {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}

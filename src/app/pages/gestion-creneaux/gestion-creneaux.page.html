@@ -1,136 +1,130 @@
+<app-sidebar role="PRESTATAIRE" activePage="rdv"></app-sidebar>
+
 <ion-content>
-  <div class="min-h-screen bg-[#f7f9fb] pb-28">
+<div class="page-root">
+<div class="main-content">
 
-    <!-- VUE LISTE -->
-    <div *ngIf="!showAddForm">
+  <!-- VUE LISTE -->
+  <div *ngIf="!showAddForm">
 
-      <div class="px-6 pt-10">
-        <app-montour-header></app-montour-header>
-      </div>
-
-      <div class="px-6">
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h2 class="page-title">Mes créneaux</h2>
-            <p class="page-subtitle">Gérez vos disponibilités</p>
-          </div>
-          <button class="add-btn" (click)="showAddForm = true">
-            <ion-icon name="add-outline"></ion-icon>
-          </button>
-        </div>
-
-        <!-- Empty -->
-        <div *ngIf="creneaux.length === 0" class="empty-state">
-          <span style="font-size: 48px;">🕐</span>
-          <p>Aucun créneau défini</p>
-          <p style="font-size: 13px; color: #9fa1b0; margin-top: 4px;">Cliquez sur + pour ajouter</p>
-        </div>
-
-        <!-- Liste créneaux -->
-        <div class="creneaux-list">
-          <div *ngFor="let creneau of creneaux" class="creneau-card">
-            <div class="creneau-time">
-              <p class="creneau-heure">{{ creneau.heureDebut }}</p>
-              <p class="creneau-separator">→</p>
-              <p class="creneau-heure">{{ creneau.heureFin }}</p>
-            </div>
-            <div class="creneau-info">
-              <p class="creneau-duree">{{ creneau.dureePrestation }} min / client</p>
-              <p class="creneau-capacite">👥 {{ creneau.capacite }} client(s) max</p>
-              <p class="creneau-dates">📅 {{ creneau.dates.length }} date(s)</p>
-              <div class="dates-chips">
-                <span *ngFor="let date of creneau.dates.slice(0,2)" class="date-chip">{{ date }}</span>
-                <span *ngIf="creneau.dates.length > 2" class="date-chip more">+{{ creneau.dates.length - 2 }}</span>
-              </div>
-            </div>
-            <button class="delete-btn" (click)="supprimerCreneau(creneau)">
-              <ion-icon name="trash-outline"></ion-icon>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <app-bottom-nav-provider activePage="creneaux"></app-bottom-nav-provider>
-
+    <div class="px-6 pt-10">
+      <app-montour-header></app-montour-header>
     </div>
 
-    <!-- VUE FORMULAIRE -->
-    <div *ngIf="showAddForm" class="form-view">
-
-      <!-- Bouton retour -->
-      <div class="form-header px-6 pt-12 pb-4">
-  <button class="back-btn" (click)="showAddForm = false; resetForm()">
-    <ion-icon name="arrow-back-outline"></ion-icon>
-  </button>
-  <h2 class="form-page-title">Nouveau créneau</h2>
-</div>
-
-      <div class="px-6">
-
-        <!-- Calendrier -->
-        <div class="form-group">
-          <label class="form-label">Choisir les dates</label>
-          <div class="calendar-section">
-            <div class="calendar-nav">
-              <button (click)="moisPrecedent()">‹</button>
-              <span class="calendar-month">{{ moisActuel }}</span>
-              <button (click)="moisSuivant()">›</button>
-            </div>
-            <div class="calendar-grid">
-              <div class="calendar-day-label" *ngFor="let j of joursLabels">{{ j }}</div>
-              <div *ngFor="let day of calendarDays"
-                [class]="!day ? 'calendar-day empty' : day.passe ? 'calendar-day passe' : isDateSelected(day.date) ? 'calendar-day selected' : 'calendar-day'"
-                (click)="day && !day.passe && toggleDate(day)">
-                {{ day?.num || '' }}
-              </div>
-            </div>
-          </div>
-          <p class="selected-dates-info" *ngIf="nouveauCreneau.dates.length > 0">
-            ✅ {{ nouveauCreneau.dates.length }} date(s) sélectionnée(s)
-          </p>
+    <div class="px-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="page-title">Mes créneaux</h2>
+          <p class="page-subtitle">Gérez vos disponibilités</p>
         </div>
-
-        <!-- Horaires -->
-        <div class="form-group">
-          <label class="form-label">Horaires</label>
-          <div class="horaires-row">
-            <div class="horaire-input">
-              <label class="horaire-label">Début</label>
-              <input type="time" [(ngModel)]="nouveauCreneau.heureDebut" class="form-input"/>
-            </div>
-            <div class="horaire-separator">→</div>
-            <div class="horaire-input">
-              <label class="horaire-label">Fin</label>
-              <input type="time" [(ngModel)]="nouveauCreneau.heureFin" class="form-input"/>
-            </div>
-          </div>
-        </div>
-
-        <!-- Durée prestation -->
-        <div class="form-group">
-          <label class="form-label">Durée par client</label>
-          <p class="form-hint">Temps nécessaire pour chaque prestation</p>
-          <div class="duree-options">
-            <button *ngFor="let d of durees"
-              (click)="nouveauCreneau.dureePrestation = d"
-              [class]="nouveauCreneau.dureePrestation === d ? 'duree-btn active' : 'duree-btn'">
-              {{ d }} min
-            </button>
-          </div>
-          <p class="capacite-info" *ngIf="calculerCapacite() > 0">
-            📊 Capacité : {{ calculerCapacite() }} client(s) par session
-          </p>
-        </div>
-
-        <!-- Bouton ajouter -->
-        <button class="save-btn" (click)="ajouterCreneau()">
-          <ion-icon name="checkmark-outline"></ion-icon>
-          Ajouter ce créneau
+        <button class="add-btn" (click)="showAddForm = true">
+          <ion-icon name="add-outline"></ion-icon>
         </button>
-
       </div>
+
+      <div *ngIf="creneaux.length === 0" class="empty-state">
+        <span style="font-size: 48px;">🕐</span>
+        <p>Aucun créneau défini</p>
+        <p style="font-size: 13px; color: #9fa1b0; margin-top: 4px;">Cliquez sur + pour ajouter</p>
+      </div>
+
+      <div class="creneaux-list">
+        <div *ngFor="let creneau of creneaux" class="creneau-card">
+          <div class="creneau-time">
+            <p class="creneau-heure">{{ creneau.heureDebut }}</p>
+            <p class="creneau-separator">→</p>
+            <p class="creneau-heure">{{ creneau.heureFin }}</p>
+          </div>
+          <div class="creneau-info">
+            <p class="creneau-duree">{{ creneau.dureePrestation }} min / client</p>
+            <p class="creneau-capacite">👥 {{ creneau.capacite }} client(s) max</p>
+            <p class="creneau-dates">📅 {{ creneau.dates.length }} date(s)</p>
+            <div class="dates-chips">
+              <span *ngFor="let date of creneau.dates.slice(0,2)" class="date-chip">{{ date }}</span>
+              <span *ngIf="creneau.dates.length > 2" class="date-chip more">+{{ creneau.dates.length - 2 }}</span>
+            </div>
+          </div>
+          <button class="delete-btn" (click)="supprimerCreneau(creneau)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <app-bottom-nav-provider activePage="creneaux"></app-bottom-nav-provider>
+  </div>
+
+  <!-- VUE FORMULAIRE -->
+  <div *ngIf="showAddForm" class="form-view">
+
+    <div class="form-header px-6 pt-12 pb-4">
+      <button class="back-btn" (click)="showAddForm = false; resetForm()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h2 class="form-page-title">Nouveau créneau</h2>
+    </div>
+
+    <div class="px-6">
+      <div class="form-group">
+        <label class="form-label">Choisir les dates</label>
+        <div class="calendar-section">
+          <div class="calendar-nav">
+            <button (click)="moisPrecedent()">‹</button>
+            <span class="calendar-month">{{ moisActuel }}</span>
+            <button (click)="moisSuivant()">›</button>
+          </div>
+          <div class="calendar-grid">
+            <div class="calendar-day-label" *ngFor="let j of joursLabels">{{ j }}</div>
+            <div *ngFor="let day of calendarDays"
+              [class]="!day ? 'calendar-day empty' : day.passe ? 'calendar-day passe' : isDateSelected(day.date) ? 'calendar-day selected' : 'calendar-day'"
+              (click)="day && !day.passe && toggleDate(day)">
+              {{ day?.num || '' }}
+            </div>
+          </div>
+        </div>
+        <p class="selected-dates-info" *ngIf="nouveauCreneau.dates.length > 0">
+          ✅ {{ nouveauCreneau.dates.length }} date(s) sélectionnée(s)
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Horaires</label>
+        <div class="horaires-row">
+          <div class="horaire-input">
+            <label class="horaire-label">Début</label>
+            <input type="time" [(ngModel)]="nouveauCreneau.heureDebut" class="form-input"/>
+          </div>
+          <div class="horaire-separator">→</div>
+          <div class="horaire-input">
+            <label class="horaire-label">Fin</label>
+            <input type="time" [(ngModel)]="nouveauCreneau.heureFin" class="form-input"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Durée par client</label>
+        <p class="form-hint">Temps nécessaire pour chaque prestation</p>
+        <div class="duree-options">
+          <button *ngFor="let d of durees"
+            (click)="nouveauCreneau.dureePrestation = d"
+            [class]="nouveauCreneau.dureePrestation === d ? 'duree-btn active' : 'duree-btn'">
+            {{ d }} min
+          </button>
+        </div>
+        <p class="capacite-info" *ngIf="calculerCapacite() > 0">
+          📊 Capacité : {{ calculerCapacite() }} client(s) par session
+        </p>
+      </div>
+
+      <button class="save-btn" (click)="ajouterCreneau()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        Ajouter ce créneau
+      </button>
     </div>
 
   </div>
+
+</div>
+</div>
 </ion-content>

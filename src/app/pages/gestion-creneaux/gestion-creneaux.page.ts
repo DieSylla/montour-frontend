@@ -9,13 +9,14 @@ import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-gestion-creneaux',
   templateUrl: './gestion-creneaux.page.html',
   styleUrls: ['./gestion-creneaux.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavProviderComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavProviderComponent,CommonModule,SidebarComponent],
 })
 export class GestionCreneauxPage implements OnInit {
   user: any = null;

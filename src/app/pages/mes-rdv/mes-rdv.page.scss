@@ -126,3 +126,13 @@ ion-content { --background: #f4f6f9; }
   color: #1C6E8C; 
   font-weight: 500; 
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 1024px) {
+  :host { display: block !important; }
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+  }
+}

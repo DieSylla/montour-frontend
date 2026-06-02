@@ -8,13 +8,13 @@ import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
-
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-provider-file',
   templateUrl: './provider-file.page.html',
   styleUrls: ['./provider-file.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavProviderComponent],
+  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavProviderComponent,CommonModule, SidebarComponent],
 })
 export class ProviderFilePage implements OnInit {
   fileAttente: any[] = [];

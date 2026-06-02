@@ -81,3 +81,13 @@ ion-content { --background: #f4f6f9; }
 .service-cat   { font-size: 12px; color: #1C6E8C; font-weight: 600; margin-bottom: 3px; }
 .service-adresse { font-size: 12px; color: #9fa1b0; }
 .service-arrow { font-size: 18px; color: #c3c5d7; flex-shrink: 0; }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 1024px) {
+  :host { display: block !important; }
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+  }
+}

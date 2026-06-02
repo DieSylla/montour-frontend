@@ -1,116 +1,168 @@
+<app-sidebar role="ADMIN" activePage="dashboard"></app-sidebar>
+
 <ion-content>
-  <div class="min-h-screen bg-[#f7f9fb] pb-10">
+<div class="page-root">
+<div class="main-content">
 
-<!-- Header MonTour -->
-<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
-  <div class="flex items-center justify-between px-6 py-4">
-    <div class="flex items-center gap-2">
-      <div style="background: #1C6E8C; padding: 8px; border-radius: 12px; display: inline-flex;">
-        <span class="material-symbols-outlined" style="color: white; font-size: 24px; font-family: 'Material Symbols Outlined';">confirmation_number</span>
+  <!-- Header -->
+  <header class="top-bar">
+    <div class="top-left">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
       </div>
-      <h1 style="font-size: 22px; font-weight: 900; color: #1C6E8C; letter-spacing: -0.05em;">MonTour</h1>
+      <span class="logo-text">MonTour</span>
     </div>
-    <button class="header-icon-btn" (click)="router.navigate(['/profile'])">
-      <ion-icon name="person-outline"></ion-icon>
+    <button class="logout-btn" (click)="logout()">
+      <ion-icon name="log-out-outline"></ion-icon>
     </button>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero-section">
+    <p class="hero-role">Administrateur</p>
+    <h2 class="hero-title">Panneau de contrôle</h2>
+
+    <div class="stats-row" *ngIf="!loading">
+      <div class="stat-card">
+        <span class="stat-val">{{ stats.utilisateurs?.total || 0 }}</span>
+        <span class="stat-lbl">Utilisateurs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val">{{ stats.entreprises?.validees || 0 }}</span>
+        <span class="stat-lbl">Entreprises</span>
+      </div>
+      <div class="stat-card"
+        [style.border-color]="stats.entreprises?.enAttente > 0 ? '#D4A017' : 'transparent'">
+        <span class="stat-val"
+          [style.color]="stats.entreprises?.enAttente > 0 ? '#D4A017' : '#191c1e'">
+          {{ stats.entreprises?.enAttente || 0 }}
+        </span>
+        <span class="stat-lbl">En attente</span>
+      </div>
+    </div>
   </div>
-</header>
 
-    <div style="margin-top: 80px;">
+  <div class="content-area">
 
-      <!-- Stats section -->
-      <div class="admin-stats px-6 mb-6">
-        <p class="admin-title">Administration 🛡️</p>
-        <p class="admin-subtitle">MonTour — Panneau de contrôle</p>
-        <div class="stats-grid mt-4">
-          <div class="stat-card">
-            <ion-icon name="people-outline"></ion-icon>
-            <span class="stat-value">{{ stats.totalUsers }}</span>
-            <span class="stat-label">Utilisateurs</span>
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <button [class]="activeTab === 'stats' ? 'tab active' : 'tab'" (click)="activeTab = 'stats'">
+        Vue d'ensemble
+      </button>
+      <button [class]="activeTab === 'entreprises' ? 'tab active' : 'tab'" (click)="activeTab = 'entreprises'">
+        Entreprises
+        <span class="tab-badge" *ngIf="pendingEntreprises.length > 0">{{ pendingEntreprises.length }}</span>
+      </button>
+    </div>
+
+    <!-- VUE D'ENSEMBLE -->
+    <div *ngIf="activeTab === 'stats'">
+      <div *ngIf="loading" class="loading-box">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+      <ng-container *ngIf="!loading">
+        <p class="section-title">👥 Utilisateurs</p>
+        <div class="info-grid">
+          <div class="info-card">
+            <p class="info-val">{{ stats.utilisateurs?.total || 0 }}</p>
+            <p class="info-lbl">Total</p>
           </div>
-          <div class="stat-card">
-            <ion-icon name="business-outline"></ion-icon>
-            <span class="stat-value">{{ stats.totalEntreprises }}</span>
-            <span class="stat-label">Entreprises</span>
+          <div class="info-card">
+            <p class="info-val blue">{{ stats.utilisateurs?.clients || 0 }}</p>
+            <p class="info-lbl">Clients</p>
           </div>
-          <div class="stat-card">
-            <ion-icon name="ticket-outline"></ion-icon>
-            <span class="stat-value">{{ stats.totalTickets }}</span>
-            <span class="stat-label">Tickets</span>
+          <div class="info-card">
+            <p class="info-val green">{{ stats.utilisateurs?.prestataires || 0 }}</p>
+            <p class="info-lbl">Prestataires</p>
           </div>
         </div>
-      </div>
-
-      <!-- Tabs -->
-      <div class="tabs px-6 mb-4">
-        <button [class]="activeTab === 'stats' ? 'tab active' : 'tab'" (click)="activeTab = 'stats'">
-          Vue d'ensemble
-        </button>
-        <button [class]="activeTab === 'entreprises' ? 'tab active' : 'tab'" (click)="activeTab = 'entreprises'">
-          Entreprises
-          <span class="badge" *ngIf="pendingEntreprises.length > 0">{{ pendingEntreprises.length }}</span>
-        </button>
-      </div>
-
-      <!-- Vue d'ensemble -->
-      <div class="px-6" *ngIf="activeTab === 'stats'">
-        <div class="action-cards">
-
-          <div class="action-card" (click)="activeTab = 'entreprises'">
-            <div class="action-icon" style="background: #e8f4f8;">
-              <ion-icon name="business-outline" style="color: #1C6E8C;"></ion-icon>
-            </div>
-            <div class="action-info">
-              <p class="action-title">Entreprises en attente</p>
-              <p class="action-desc">{{ pendingEntreprises.length }} demande(s) à traiter</p>
-            </div>
+        <div class="menu-item" (click)="router.navigate(['/admin-users'])">
+          <div class="menu-icon" style="background:#e8f8f0;">
+            <ion-icon name="people-outline" style="color:#006c49;"></ion-icon>
           </div>
-
-          <div class="action-card" (click)="router.navigate(['/admin-users'])">
-            <div class="action-icon" style="background: #e8f8f0;">
-              <ion-icon name="people-outline" style="color: #006c49;"></ion-icon>
-            </div>
-            <div class="action-info">
-              <p class="action-title">Gérer les utilisateurs</p>
-              <p class="action-desc">{{ stats.totalUsers }} utilisateur(s) inscrits</p>
-            </div>
+          <div class="menu-content">
+            <p class="menu-title">Gérer les utilisateurs</p>
+            <p class="menu-sub">{{ stats.utilisateurs?.total || 0 }} utilisateur(s) inscrits</p>
           </div>
-
+          <ion-icon name="chevron-forward-outline" class="menu-arrow"></ion-icon>
         </div>
+        <div class="alert-card" *ngIf="stats.entreprises?.enAttente > 0"
+          (click)="activeTab = 'entreprises'">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-info">
+            <p class="alert-title">{{ stats.entreprises?.enAttente }} entreprise(s) en attente</p>
+            <p class="alert-sub">Cliquez pour traiter les demandes</p>
+          </div>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- ENTREPRISES -->
+    <div *ngIf="activeTab === 'entreprises'">
+      <div *ngIf="pendingEntreprises.length === 0" class="empty-box">
+        <div class="empty-icon">✅</div>
+        <p class="empty-title">Aucune demande en attente</p>
+        <p class="empty-sub">Toutes les entreprises ont été traitées</p>
       </div>
-
-      <!-- Entreprises en attente -->
-      <div class="px-6" *ngIf="activeTab === 'entreprises'">
-
-        <div *ngIf="pendingEntreprises.length === 0" class="empty-state">
-          <span style="font-size: 48px;">✅</span>
-          <p>Aucune demande en attente</p>
-        </div>
-
-        <div class="entreprise-list">
-          <div *ngFor="let e of pendingEntreprises" class="entreprise-card">
-            <div class="entreprise-info">
+      <div class="entreprise-list">
+        <div *ngFor="let e of pendingEntreprises" class="entreprise-card">
+          <div class="entreprise-header">
+            <div class="entreprise-avatar">
+              <ion-icon name="business-outline"></ion-icon>
+            </div>
+            <div class="entreprise-title-block">
               <h3 class="entreprise-nom">{{ e.nom }}</h3>
-              <p class="entreprise-type">{{ e.typeService }}</p>
-              <p class="entreprise-ninea">NINEA : {{ e.ninea }}</p>
-              <p class="entreprise-email">{{ e.email }}</p>
+              <p class="entreprise-type">{{ e.typeService || e.categorie }}</p>
             </div>
-            <div class="entreprise-actions">
-              <button class="btn-valider" (click)="valider(e)">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-              </button>
-              <button class="btn-rejeter" (click)="rejeter(e)">
-                <ion-icon name="close-circle-outline"></ion-icon>
-              </button>
+            <span class="badge-attente">En attente</span>
+          </div>
+          <div class="entreprise-grid">
+            <div class="entreprise-field">
+              <p class="field-label">Email</p>
+              <p class="field-val"><ion-icon name="mail-outline"></ion-icon> {{ e.email }}</p>
+            </div>
+            <div class="entreprise-field" *ngIf="e.telephone">
+              <p class="field-label">Téléphone</p>
+              <p class="field-val"><ion-icon name="call-outline"></ion-icon> {{ e.telephone }}</p>
+            </div>
+            <div class="entreprise-field" *ngIf="e.ninea">
+              <p class="field-label">NINEA</p>
+              <p class="field-val"><ion-icon name="card-outline"></ion-icon> {{ e.ninea }}</p>
+            </div>
+            <div class="entreprise-field" *ngIf="e.nomResponsable">
+              <p class="field-label">Responsable</p>
+              <p class="field-val"><ion-icon name="person-outline"></ion-icon> {{ e.nomResponsable }}</p>
+            </div>
+            <div class="entreprise-field" *ngIf="e.adresse" style="grid-column: span 2;">
+              <p class="field-label">Adresse</p>
+              <p class="field-val"><ion-icon name="location-outline"></ion-icon> {{ e.adresse }}</p>
+            </div>
+            <div class="entreprise-field" *ngIf="e.createdAt">
+              <p class="field-label">Date d'inscription</p>
+              <p class="field-val"><ion-icon name="calendar-outline"></ion-icon> {{ formatDate(e.createdAt) }}</p>
             </div>
           </div>
+          <div class="specialites-row" *ngIf="e.specialites?.length > 0">
+            <p class="field-label">Spécialités</p>
+            <div class="specialites-badges">
+              <span *ngFor="let s of e.specialites" class="badge-specialite">{{ s }}</span>
+            </div>
+          </div>
+          <div class="entreprise-actions">
+            <button class="btn-valider" (click)="valider(e)">
+              <ion-icon name="checkmark-outline"></ion-icon> Valider
+            </button>
+            <button class="btn-rejeter" (click)="rejeter(e)">
+              <ion-icon name="close-outline"></ion-icon> Rejeter
+            </button>
+          </div>
         </div>
-
       </div>
-
-      <!-- Profile -->
-      
     </div>
 
   </div>
+
+</div>
+</div>
 </ion-content>

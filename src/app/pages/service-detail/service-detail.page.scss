@@ -61,3 +61,19 @@ ion-content { --background: #f4f6f9; }
   &.rdv    { background: #e8f5ee; color: #006c49; }
   &.ticket { background: #e8f3f7; color: #1C6E8C; }
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 768px) {
+  :host {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .page-root,
+  .min-h-screen {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}

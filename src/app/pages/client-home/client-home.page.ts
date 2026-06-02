@@ -9,13 +9,14 @@ import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { NavigationService } from '../../services/navigation.service';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-client-home',
   templateUrl: './client-home.page.html',
   styleUrls: ['./client-home.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner, BottomNavComponent,SidebarComponent],
 })
 export class ClientHomePage implements OnInit {
   user: any = null;

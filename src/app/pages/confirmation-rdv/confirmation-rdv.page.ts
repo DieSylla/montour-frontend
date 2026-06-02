@@ -6,13 +6,14 @@ import { AuthService } from '../../services/auth';
 import { NavigationService } from '../../services/navigation.service';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-confirmation-rdv',
   templateUrl: './confirmation-rdv.page.html',
   styleUrls: ['./confirmation-rdv.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, MontourHeaderComponent, BottomNavComponent],
+  imports: [CommonModule, IonContent, MontourHeaderComponent, BottomNavComponent,SidebarComponent],
 })
 export class ConfirmationRdvPage implements OnInit {
   service: any    = null;

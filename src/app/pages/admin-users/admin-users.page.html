@@ -1,13 +1,82 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>admin-users</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-sidebar role="ADMIN" activePage="users"></app-sidebar>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">admin-users</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+<div class="page-root">
+<div class="main-content">
+
+  <!-- Header -->
+  <header class="top-bar">
+    <button class="back-btn" (click)="router.navigate(['/admin-dashboard'])">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+    <h2 class="top-title">Utilisateurs</h2>
+    <span class="top-count">{{ filteredUsers.length }}</span>
+  </header>
+
+  <div class="content-area">
+
+    <!-- Recherche -->
+    <div class="search-box">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Rechercher un utilisateur..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="appliquerFiltres()"/>
+    </div>
+
+    <!-- Filtres rôle -->
+    <div class="filtres-row">
+      <button [class]="filtreRole === 'TOUS' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreRole('TOUS')">Tous</button>
+      <button [class]="filtreRole === 'CLIENT' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreRole('CLIENT')">Clients</button>
+      <button [class]="filtreRole === 'PRESTATAIRE' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreRole('PRESTATAIRE')">Prestataires</button>
+      <button [class]="filtreRole === 'ADMIN' ? 'filtre-btn active' : 'filtre-btn'"
+        (click)="setFiltreRole('ADMIN')">Admins</button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-box">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    <!-- Liste -->
+    <div class="users-list" *ngIf="!loading">
+
+      <div *ngIf="filteredUsers.length === 0" class="empty-box">
+        <div class="empty-icon">👥</div>
+        <p class="empty-title">Aucun utilisateur trouvé</p>
+      </div>
+
+      <div *ngFor="let user of filteredUsers" class="user-card">
+        <div class="user-avatar" [style.background]="getRoleColor(user.role) + '18'">
+          <span class="user-initiales" [style.color]="getRoleColor(user.role)">
+            {{ getInitiales(user) }}
+          </span>
+        </div>
+        <div class="user-info">
+          <p class="user-nom">{{ user.prenom }} {{ user.nom }}</p>
+          <p class="user-email">{{ user.email }}</p>
+          <p class="user-date">Inscrit le {{ formatDate(user.createdAt) }}</p>
+        </div>
+        <div class="user-role-wrap">
+          <span class="user-role"
+            [style.color]="getRoleColor(user.role)"
+            [style.background]="getRoleColor(user.role) + '18'">
+            {{ getRoleLabel(user.role) }}
+          </span>
+          <span class="user-verified" *ngIf="user.isVerified">✅</span>
+          <span class="user-verified" *ngIf="!user.isVerified">⏳</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>
 </ion-content>

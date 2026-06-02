@@ -6,13 +6,14 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline, notificationsOutline, checkmarkDoneOutline, calendarOutline, checkmarkCircleOutline, closeCircleOutline, ticketOutline, megaphoneOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.page.html',
   styleUrls: ['./notifications.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner],
+  imports: [CommonModule, IonContent, IonIcon, IonSpinner,CommonModule,SidebarComponent],
 })
 export class NotificationsPage implements OnInit {
   notifications: any[] = [];

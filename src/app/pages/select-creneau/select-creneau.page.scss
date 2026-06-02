@@ -88,3 +88,19 @@ ion-content { --background: #f4f6f9; }
   border: none; border-radius: 14px; font-size: 16px; font-weight: 700;
   cursor: pointer; box-shadow: 0 4px 16px rgba(28,110,140,0.25);
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 768px) {
+  :host {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .page-root,
+  .min-h-screen {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}

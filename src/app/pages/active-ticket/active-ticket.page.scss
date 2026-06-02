@@ -209,3 +209,13 @@ ion-content {
     ion-icon { color: #1C6E8C; }
   }
 }
+
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 1024px) {
+  :host { display: block !important; }
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+  }
+}
