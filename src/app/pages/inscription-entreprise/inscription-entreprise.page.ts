@@ -16,6 +16,7 @@ import { ApiService } from '../../services/api';
 })
 export class InscriptionEntreprisePage {
   loading = false;
+  currentStep = 1;
 
   form = {
     nom: '',

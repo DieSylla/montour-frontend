@@ -10,12 +10,13 @@ import { NavigationService } from '../../services/navigation.service';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-recap-reservation',
   templateUrl: './recap-reservation.page.html',
   styleUrls: ['./recap-reservation.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
 })
 export class RecapReservationPage implements OnInit {
   service: any    = null;

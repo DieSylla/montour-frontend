@@ -9,12 +9,13 @@ import { ApiService } from '../../services/api';
 import { NavigationService } from '../../services/navigation.service';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-service-detail',
   templateUrl: './service-detail.page.html',
   styleUrls: ['./service-detail.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
 })
 export class ServiceDetailPage implements OnInit {
   service: any = null;

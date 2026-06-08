@@ -9,12 +9,13 @@ import { ApiService } from '../../services/api';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.page.html',
   styleUrls: ['./booking.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
 })
 export class BookingPage implements OnInit {
   reservations: any[] = [];

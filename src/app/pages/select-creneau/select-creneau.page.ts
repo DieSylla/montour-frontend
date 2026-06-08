@@ -11,12 +11,13 @@ import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.compo
 
 type Vue = 'choix' | 'calendrier';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-select-creneau',
   templateUrl: './select-creneau.page.html',
   styleUrls: ['./select-creneau.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent],
 })
 export class SelectCreneauPage implements OnInit {
   service: any     = null;

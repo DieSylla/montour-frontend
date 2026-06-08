@@ -1,105 +1,190 @@
 <ion-content>
 <div class="page-root">
 
-  <!-- Header -->
-  <header class="top-bar">
+  <!-- Hero fullscreen -->
+  <div class="hero-section">
     <button class="back-btn" (click)="router.navigate(['/login'])">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </button>
-    <h2 class="top-title">Rejoindre MonTour</h2>
-  </header>
+    <div class="hero-content">
+      <div class="hero-icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
+      </div>
+      <h1 class="hero-title">Rejoindre MonTour</h1>
+      <p class="hero-desc">Gérez votre file d'attente intelligemment et offrez une meilleure expérience à vos clients.</p>
+      <div class="hero-badges">
+        <div class="hero-badge">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Gratuit</span>
+        </div>
+        <div class="hero-badge">
+          <ion-icon name="flash-outline"></ion-icon>
+          <span>Activation sous 48h</span>
+        </div>
+        <div class="hero-badge">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>Sécurisé</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- Hero -->
-  <div class="hero-section">
-    <p class="hero-sub">Votre établissement n'est pas encore sur MonTour ?</p>
-    <h2 class="hero-title">Soumettez votre demande d'adhésion</h2>
-    <p class="hero-desc">Notre équipe examinera votre dossier et vous enverra votre code d'accès sous 48h.</p>
+  <!-- Steps indicator -->
+  <div class="steps-bar">
+    <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
+      <div class="step-dot">{{ currentStep > 1 ? '✓' : '1' }}</div>
+      <span>Établissement</span>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 1"></div>
+    <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+      <div class="step-dot">{{ currentStep > 2 ? '✓' : '2' }}</div>
+      <span>Spécialités</span>
+    </div>
+    <div class="step-line" [class.active]="currentStep > 2"></div>
+    <div class="step" [class.active]="currentStep >= 3">
+      <div class="step-dot">3</div>
+      <span>Contact</span>
+    </div>
   </div>
 
   <div class="content-area">
 
-    <!-- Infos établissement -->
-    <p class="section-title">Informations de l'établissement</p>
-    <div class="form-card">
-      <div class="field">
-        <label class="field-label">Nom de l'établissement *</label>
-        <input class="field-input" type="text" [(ngModel)]="form.nom" placeholder="Ex: Clinique Pasteur Dakar"/>
-      </div>
-      <div class="field">
-        <label class="field-label">Nom du responsable *</label>
-        <input class="field-input" type="text" [(ngModel)]="form.nomResponsable" placeholder="Prénom et nom"/>
-      </div>
-      <div class="field">
-        <label class="field-label">Type de service *</label>
-        <div class="type-pills">
-          <button *ngFor="let t of typesService"
-            [class]="form.typeService === t ? 'type-pill active' : 'type-pill'"
-            (click)="form.typeService = t">
-            {{ t }}
-          </button>
+    <!-- STEP 1 : Établissement -->
+    <div class="form-step" *ngIf="currentStep === 1">
+      <h3 class="step-title">Votre établissement</h3>
+      <p class="step-sub">Informations générales sur votre structure</p>
+
+      <div class="field-group">
+        <div class="field">
+          <label class="field-label">Nom de l'établissement *</label>
+          <input class="field-input" type="text" [(ngModel)]="form.nom" placeholder="Ex: Clinique Pasteur Dakar"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Nom du responsable *</label>
+          <input class="field-input" type="text" [(ngModel)]="form.nomResponsable" placeholder="Prénom et nom"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Type de service *</label>
+          <div class="type-pills">
+            <button *ngFor="let t of typesService"
+              [class]="form.typeService === t ? 'type-pill active' : 'type-pill'"
+              (click)="form.typeService = t">
+              {{ t }}
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">NINEA *</label>
+          <input class="field-input" type="text" [(ngModel)]="form.ninea" placeholder="Ex: 001234567"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Adresse *</label>
+          <input class="field-input" type="text" [(ngModel)]="form.adresse" placeholder="Ex: Route de Rufisque, Dakar"/>
         </div>
       </div>
-      <div class="field">
-        <label class="field-label">NINEA *</label>
-        <input class="field-input" type="text" [(ngModel)]="form.ninea" placeholder="Ex: 001234567"/>
+
+      <button class="next-btn" (click)="currentStep = 2">
+        Continuer
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- STEP 2 : Spécialités -->
+    <div class="form-step" *ngIf="currentStep === 2">
+      <h3 class="step-title">Vos spécialités</h3>
+      <p class="step-sub">Ajoutez les services proposés par votre établissement</p>
+
+      <div class="field-group">
+        <div class="field">
+          <label class="field-label">Ajouter une spécialité</label>
+          <div class="specialite-row">
+            <input class="field-input" type="text"
+              [(ngModel)]="nouvelleSpecialite"
+              placeholder="Ex: Cardiologie"
+              (keyup.enter)="ajouterSpecialite()"/>
+            <button class="add-spec-btn" (click)="ajouterSpecialite()">
+              <ion-icon name="add-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="specialites-list" *ngIf="form.specialites.length > 0">
+          <div *ngFor="let s of form.specialites; let i = index" class="spec-chip">
+            <span>{{ s }}</span>
+            <button (click)="supprimerSpecialite(i)">
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="empty-spec-box" *ngIf="form.specialites.length === 0">
+          <ion-icon name="medical-outline"></ion-icon>
+          <p>Aucune spécialité ajoutée</p>
+          <span>Optionnel — vous pourrez en ajouter plus tard</span>
+        </div>
       </div>
-      <div class="field">
-        <label class="field-label">Adresse *</label>
-        <input class="field-input" type="text" [(ngModel)]="form.adresse" placeholder="Ex: Route de Rufisque, Dakar"/>
+
+      <div class="nav-btns">
+        <button class="back-step-btn" (click)="currentStep = 1">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Retour
+        </button>
+        <button class="next-btn" (click)="currentStep = 3">
+          Continuer
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
       </div>
     </div>
 
-    <!-- Spécialités -->
-    <p class="section-title">Spécialités proposées</p>
-    <div class="form-card">
-      <div class="field">
-        <label class="field-label">Ajouter une spécialité</label>
-        <div class="specialite-row">
-          <input class="field-input" type="text"
-            [(ngModel)]="nouvelleSpecialite"
-            placeholder="Ex: Cardiologie"
-            (keyup.enter)="ajouterSpecialite()"/>
-          <button class="add-spec-btn" (click)="ajouterSpecialite()">
-            <ion-icon name="add-outline"></ion-icon>
-          </button>
+    <!-- STEP 3 : Contact -->
+    <div class="form-step" *ngIf="currentStep === 3">
+      <h3 class="step-title">Coordonnées</h3>
+      <p class="step-sub">Comment vous contacter pour l'activation</p>
+
+      <div class="field-group">
+        <div class="field">
+          <label class="field-label">Email *</label>
+          <input class="field-input" type="email" [(ngModel)]="form.email" placeholder="contact@etablissement.sn"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Téléphone *</label>
+          <input class="field-input" type="tel" [(ngModel)]="form.telephone" placeholder="77 000 00 00"/>
         </div>
       </div>
-      <div class="specialites-list" *ngIf="form.specialites.length > 0">
-        <div *ngFor="let s of form.specialites; let i = index" class="spec-chip">
-          <span>{{ s }}</span>
-          <button (click)="supprimerSpecialite(i)">
-            <ion-icon name="close-outline"></ion-icon>
-          </button>
+
+      <!-- Récap -->
+      <div class="recap-card">
+        <p class="recap-title">Récapitulatif</p>
+        <div class="recap-row">
+          <span class="recap-label">Établissement</span>
+          <span class="recap-val">{{ form.nom || '—' }}</span>
+        </div>
+        <div class="recap-row">
+          <span class="recap-label">Type</span>
+          <span class="recap-val">{{ form.typeService || '—' }}</span>
+        </div>
+        <div class="recap-row">
+          <span class="recap-label">Spécialités</span>
+          <span class="recap-val">{{ form.specialites.length }} ajoutée(s)</span>
         </div>
       </div>
-      <p class="empty-spec" *ngIf="form.specialites.length === 0">
-        Aucune spécialité ajoutée
+
+      <div class="nav-btns">
+        <button class="back-step-btn" (click)="currentStep = 2">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          Retour
+        </button>
+        <button class="submit-btn" (click)="soumettre()" [disabled]="loading">
+          <ion-spinner name="crescent" *ngIf="loading" style="width:18px;height:18px;"></ion-spinner>
+          <ion-icon name="checkmark-outline" *ngIf="!loading"></ion-icon>
+          {{ loading ? 'Envoi en cours...' : 'Soumettre la demande' }}
+        </button>
+      </div>
+
+      <p class="info-text">
+        🔒 Après validation, vous recevrez un code d'accès pour inscrire vos prestataires sur MonTour.
       </p>
     </div>
-
-    <!-- Contact -->
-    <p class="section-title">Coordonnées de contact</p>
-    <div class="form-card">
-      <div class="field">
-        <label class="field-label">Email *</label>
-        <input class="field-input" type="email" [(ngModel)]="form.email" placeholder="contact@etablissement.sn"/>
-      </div>
-      <div class="field">
-        <label class="field-label">Téléphone *</label>
-        <input class="field-input" type="tel" [(ngModel)]="form.telephone" placeholder="77 000 00 00"/>
-      </div>
-    </div>
-
-    <!-- Bouton soumettre -->
-    <button class="submit-btn" (click)="soumettre()" [disabled]="loading">
-      <ion-spinner name="crescent" *ngIf="loading" style="width:18px;height:18px;"></ion-spinner>
-      <ion-icon name="checkmark-outline" *ngIf="!loading"></ion-icon>
-      {{ loading ? 'Envoi en cours...' : 'Soumettre la demande' }}
-    </button>
-
-    <p class="info-text">
-      Après validation, vous recevrez un code d'accès pour inscrire vos prestataires sur MonTour.
-    </p>
 
   </div>
 </div>

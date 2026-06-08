@@ -165,17 +165,11 @@ ion-content {
 }
 
 /* -- RESPONSIVE DESKTOP -- */
-@media (min-width: 768px) {
-  :host {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
-
-  .page-root,
-  .min-h-screen {
-    max-width: 900px;
-    margin: 0 auto;
+@media (min-width: 1024px) {
+  :host { display: block !important; }
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
   }
 }

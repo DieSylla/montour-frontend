@@ -10,12 +10,13 @@ import { NavigationService } from '../../services/navigation.service';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-liste-prestataires',
   templateUrl: './liste-prestataires.page.html',
   styleUrls: ['./liste-prestataires.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, MontourHeaderComponent, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, IonContent, IonIcon, IonSpinner, MontourHeaderComponent, BottomNavComponent],
 })
 export class ListePrestatairesPage implements OnInit {
   service: any     = null;

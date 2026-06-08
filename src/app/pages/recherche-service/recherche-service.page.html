@@ -1,4 +1,8 @@
+<app-sidebar role="CLIENT" activePage="home"></app-sidebar>
+
 <ion-content>
+<div class="page-root">
+<div class="main-content">
   <div class="min-h-screen bg-[#f7f9fb] pb-28">
 
     <div class="px-6 pt-10">
@@ -9,16 +13,11 @@
       <h2 style="font-size: 20px; font-weight: 700; color: #191c1e; margin-bottom: 6px;">Réserver un RDV</h2>
       <p style="font-size: 14px; color: #434654; margin-bottom: 20px;">Choisissez un service pour réserver</p>
 
-      <!-- Search -->
       <div class="search-bar mb-6">
         <ion-icon name="search-outline"></ion-icon>
-        <input
-          type="text"
-          placeholder="Rechercher un service..."
-          [(ngModel)]="search"/>
+        <input type="text" placeholder="Rechercher un service..." [(ngModel)]="search"/>
       </div>
 
-      <!-- Filters -->
       <div class="filters mb-6">
         <button *ngFor="let cat of categories"
           (click)="selectCategory(cat)"
@@ -27,7 +26,6 @@
         </button>
       </div>
 
-      <!-- Services -->
       <div class="services-list">
         <div *ngFor="let service of filteredServices"
           class="service-card"
@@ -53,15 +51,15 @@
           </div>
         </div>
 
-        <!-- Empty search -->
         <div *ngIf="filteredServices.length === 0" class="empty-search">
           <span style="font-size: 48px;">🔍</span>
           <p>Aucun service trouvé pour "{{ search }}"</p>
         </div>
       </div>
-
     </div>
 
-<app-bottom-nav activePage="home"></app-bottom-nav>
+    <app-bottom-nav activePage="home"></app-bottom-nav>
   </div>
+</div>
+</div>
 </ion-content>

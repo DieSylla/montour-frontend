@@ -9,12 +9,13 @@ import { AuthService } from '../../services/auth';
 import { MontourHeaderComponent } from '../../components/montour-header/montour-header.component';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 
+import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-recherche-service',
   templateUrl: './recherche-service.page.html',
   styleUrls: ['./recherche-service.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
+  imports: [SidebarComponent, CommonModule, FormsModule, IonContent, IonIcon, MontourHeaderComponent, BottomNavComponent],
 })
 export class RechercheServicePage implements OnInit {
   search = '';

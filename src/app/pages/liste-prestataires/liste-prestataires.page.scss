@@ -111,3 +111,12 @@ ion-content { --background: #f7f9fb; }
     margin: 0 auto;
   }
 }
+/* -- RESPONSIVE DESKTOP -- */
+@media (min-width: 1024px) {
+  :host { display: block !important; }
+  .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+  }
+}
