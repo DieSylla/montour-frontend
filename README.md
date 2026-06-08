@@ -169,7 +169,7 @@ Les fichiers générés se trouvent dans le dossier `www/`.
 
 **DieSylla**  
 Projet de fin d'études — Mémoire 2026  
-📧 diesyll@esp.sn
+📧 diesylla@esp.sn
 
 ---
 
