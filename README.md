@@ -157,19 +157,19 @@ Les fichiers générés se trouvent dans le dossier `www/`.
 
 ---
 
-## 📸 Captures d'écran
+<!-- ## 📸 Captures d'écran
 
 | Login | Dashboard Prestataire | Dashboard Admin |
 |-------|----------------------|-----------------|
 | Page de connexion sécurisée | Gestion de la file d'attente | Panneau d'administration |
 
----
+--- -->
 
 ## 👨‍💻 Auteur
 
 **DieSylla**  
 Projet de fin d'études — Mémoire 2026  
-📧 contact@montour.sn
+📧 diesyll@esp.sn
 
 ---
 
