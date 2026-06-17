@@ -1,77 +1,80 @@
 <app-sidebar role="CLIENT" activePage="home"></app-sidebar>
 
 <ion-content>
-<div class="page-root">
-<div class="main-content">
 
-  <!-- HEADER -->
-  <header class="top-bar">
-    <div class="top-left">
-      <div class="logo-icon">
-        <span class="material-symbols-outlined">confirmation_number</span>
+<ion-fab slot="fixed" vertical="top" horizontal="end">
+  <ion-fab-button size="small" color="light" (click)="router.navigate(['/notifications'])">
+    <ion-icon name="notifications-outline"></ion-icon>
+    <ion-badge *ngIf="nbNotifNonLues > 0" color="danger">{{ nbNotifNonLues }}</ion-badge>
+  </ion-fab-button>
+</ion-fab>
+  <div class="page-root">
+  <div class="main-content">
+
+    <!-- HEADER -->
+    <header class="top-bar">
+      <div class="top-left">
+        <div class="logo-icon">
+          <span class="material-symbols-outlined">confirmation_number</span>
+        </div>
+        <span class="logo-text">MonTour</span>
       </div>
-      <span class="logo-text">MonTour</span>
-    </div>
-    <button class="notif-btn" (click)="router.navigate(['/notifications'])">
-      <ion-icon name="notifications-outline"></ion-icon>
-      <span class="notif-badge" *ngIf="nbNotifNonLues > 0">{{ nbNotifNonLues }}</span>
-    </button>
-  </header>
+    </header>
 
-  <!-- BARRE DE RECHERCHE -->
-  <div class="search-bar">
-    <ion-icon name="search-outline"></ion-icon>
-    <input
-      type="text"
-      placeholder="Rechercher un service..."
-      [(ngModel)]="search"
-      (ngModelChange)="onSearch()"/>
-  </div>
-
-  <div class="content-area">
-
-    <!-- CATÉGORIES -->
-    <div class="categories-row">
-      <button *ngFor="let cat of categories"
-        [class]="selectedCategory === cat.label ? 'cat-pill active' : 'cat-pill'"
-        (click)="selectCategory(cat)">
-        {{ cat.icon }} {{ cat.label }}
-      </button>
+    <!-- BARRE DE RECHERCHE -->
+    <div class="search-bar">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Rechercher un service..."
+        [(ngModel)]="search"
+        (ngModelChange)="onSearch()"/>
     </div>
 
-    <!-- LOADING -->
-    <div *ngIf="loading" class="loading-box">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-    </div>
+    <div class="content-area">
 
-    <!-- LISTE SERVICES -->
-    <div *ngIf="!loading">
-      <p class="section-count">{{ entreprisesFiltrees.length }} service(s)</p>
-
-      <div *ngIf="entreprisesFiltrees.length === 0" class="empty-box">
-        <p class="empty-icon">🔍</p>
-        <p class="empty-title">Aucun service trouvé</p>
+      <!-- CATÉGORIES -->
+      <div class="categories-row">
+        <button *ngFor="let cat of categories"
+          [class]="selectedCategory === cat.label ? 'cat-pill active' : 'cat-pill'"
+          (click)="selectCategory(cat)">
+          {{ cat.icon }} {{ cat.label }}
+        </button>
       </div>
 
-      <div class="services-list">
-        <div *ngFor="let service of entreprisesFiltrees"
-          class="service-card"
-          (click)="allerVersService(service)">
-          <div class="service-icon">{{ service.icon }}</div>
-          <div class="service-info">
-            <h4 class="service-nom">{{ service.nom }}</h4>
-            <p class="service-cat">{{ service.categorie }}</p>
-            <p class="service-adresse">📍 {{ service.adresse }}</p>
+      <!-- LOADING -->
+      <div *ngIf="loading" class="loading-box">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+
+      <!-- LISTE SERVICES -->
+      <div *ngIf="!loading">
+        <p class="section-count">{{ entreprisesFiltrees.length }} service(s)</p>
+
+        <div *ngIf="entreprisesFiltrees.length === 0" class="empty-box">
+          <p class="empty-icon">🔍</p>
+          <p class="empty-title">Aucun service trouvé</p>
+        </div>
+
+        <div class="services-list">
+          <div *ngFor="let service of entreprisesFiltrees"
+            class="service-card"
+            (click)="allerVersService(service)">
+            <div class="service-icon">{{ service.icon }}</div>
+            <div class="service-info">
+              <h4 class="service-nom">{{ service.nom }}</h4>
+              <p class="service-cat">{{ service.categorie }}</p>
+              <p class="service-adresse">📍 {{ service.adresse }}</p>
+            </div>
+            <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
           </div>
-          <ion-icon name="chevron-forward-outline" class="service-arrow"></ion-icon>
         </div>
       </div>
+
     </div>
 
+    <app-bottom-nav activePage="home"></app-bottom-nav>
+
   </div>
-
-  <app-bottom-nav activePage="home"></app-bottom-nav>
-
-</div>
-</div>
+  </div>
 </ion-content>

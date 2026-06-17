@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { megaphoneOutline, checkmarkDoneOutline, calendarOutline, ticketOutline, timeOutline, notificationsOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
 import { Subscription, interval } from 'rxjs';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+
 
 
 interface ElementFile {
@@ -28,7 +29,7 @@ interface ElementFile {
   templateUrl: './provider-dashboard.page.html',
   styleUrls: ['./provider-dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavProviderComponent,SidebarComponent],
+imports: [CommonModule, IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, BottomNavProviderComponent, SidebarComponent],
 })
 export class ProviderDashboardPage implements OnInit, OnDestroy {
   user: any = null;

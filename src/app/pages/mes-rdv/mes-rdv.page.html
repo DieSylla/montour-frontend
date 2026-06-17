@@ -1,6 +1,13 @@
 <app-sidebar role="CLIENT" activePage="rdv"></app-sidebar>
 
 <ion-content>
+
+  <ion-fab slot="fixed" vertical="top" horizontal="end">
+    <ion-fab-button size="small" color="light" (click)="router.navigate(['/notifications'])">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <ion-badge *ngIf="nbNotifNonLues > 0" color="danger">{{ nbNotifNonLues }}</ion-badge>
+    </ion-fab-button>
+  </ion-fab>
 <div class="page-root">
 <div class="main-content">
 
@@ -39,16 +46,24 @@
           <p class="ticket-service-nom">🏥 {{ ticketActif.entrepriseNom || 'Établissement' }}</p>
           <p class="ticket-service-spec">👤 {{ ticketActif.specialite || '' }}</p>
         </div>
-        <div class="ticket-info-row">
-          <div class="ticket-info-item">
-            <p class="ti-label">Position</p>
-            <p class="ti-val">{{ ticketActif.rang }}</p>
-          </div>
-          <div class="ticket-info-item">
-            <p class="ti-label">Attente estimée</p>
-            <p class="ti-val">{{ ticketActif.tempsAttenteEstime }} min</p>
-          </div>
-        </div>
+     <div class="ticket-info-row">
+  <div class="ticket-info-item">
+    <p class="ti-label">Position</p>
+    <p class="ti-val">{{ ticketActif.rang }}ème</p>
+  </div>
+  <div class="ticket-info-item">
+    <p class="ti-label">Attente estimée</p>
+    <p class="ti-val">{{ ticketActif.tempsAttenteEstime }} min</p>
+  </div>
+  <div class="ticket-info-item">
+    <p class="ti-label">Heure de passage</p>
+    <p class="ti-val">{{ heureEstimee }}</p>
+  </div>
+  <div class="ticket-info-item">
+    <p class="ti-label">Personnes dans la file</p>
+    <p class="ti-val">{{ nbPersonnes }}</p>
+  </div>
+</div>
         <button class="annuler-ticket-btn" (click)="annulerTicket()">
           Quitter la file
         </button>
@@ -97,6 +112,7 @@
   </div>
 
   <app-bottom-nav activePage="rdv"></app-bottom-nav>
+  
 
 </div>
 </div>

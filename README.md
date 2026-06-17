@@ -157,13 +157,13 @@ Les fichiers générés se trouvent dans le dossier `www/`.
 
 ---
 
-<!-- ## 📸 Captures d'écran
+## 📸 Captures d'écran
 
 | Login | Dashboard Prestataire | Dashboard Admin |
 |-------|----------------------|-----------------|
 | Page de connexion sécurisée | Gestion de la file d'attente | Panneau d'administration |
 
---- -->
+---
 
 ## 👨‍💻 Auteur
 

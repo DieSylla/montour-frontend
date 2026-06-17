@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { searchOutline, notificationsOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
@@ -16,7 +16,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
   templateUrl: './client-home.page.html',
   styleUrls: ['./client-home.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner, BottomNavComponent,SidebarComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, BottomNavComponent, SidebarComponent],
 })
 export class ClientHomePage implements OnInit {
   user: any = null;

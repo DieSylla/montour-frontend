@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner, ToastController, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, ToastController, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   personOutline, notificationsOutline, shieldOutline,
@@ -22,6 +22,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
   standalone: true,
   imports: [
     CommonModule, FormsModule, IonContent, IonIcon, IonSpinner,
+    IonFab, IonFabButton, IonBadge,
     BottomNavComponent, BottomNavProviderComponent, SidebarComponent
   ],
 })
@@ -29,6 +30,7 @@ export class ProfilePage implements OnInit {
   user: any = null;
   role = '';
   loading = false;
+  nbNotifNonLues = 0;
 
   editMode = false;
   form = { nom: '', prenom: '', telephone: '', specialite: '', confirmationMode: '' };
@@ -51,8 +53,17 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  ngOnInit()         { this.loadUser(); }
-  ionViewWillEnter() { this.loadUser(); }
+  ngOnInit()         { this.loadUser(); this.chargerNotifsNonLues(); }
+  ionViewWillEnter() { this.loadUser(); this.chargerNotifsNonLues(); }
+
+  chargerNotifsNonLues() {
+    this.api.get<any[]>('notifications').subscribe({
+      next: (data) => {
+        this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length;
+      },
+      error: () => { this.nbNotifNonLues = 0; }
+    });
+  }
 
   loadUser() {
     this.user = this.authService.getUser();

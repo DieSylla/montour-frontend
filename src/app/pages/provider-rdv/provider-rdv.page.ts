@@ -2,16 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  IonContent, IonIcon, IonSpinner,
-  ToastController, LoadingController, AlertController
-} from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, ToastController, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {
-  addOutline, trashOutline, arrowBackOutline, checkmarkOutline,
-  checkmarkCircleOutline, closeCircleOutline, personRemoveOutline,
-  calendarOutline, timeOutline, chevronForwardOutline, chevronDownOutline
-} from 'ionicons/icons';
+import { addOutline, trashOutline, arrowBackOutline, checkmarkOutline, checkmarkCircleOutline, closeCircleOutline, personRemoveOutline, calendarOutline, timeOutline, chevronForwardOutline, chevronDownOutline, notificationsOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavProviderComponent } from '../../components/bottom-nav-provider/bottom-nav-provider.component';
@@ -24,28 +17,19 @@ type Vue = 'liste' | 'form' | 'clients-creneau';
   templateUrl: './provider-rdv.page.html',
   styleUrls: ['./provider-rdv.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner,
-    BottomNavProviderComponent,CommonModule,SidebarComponent],
+  imports: [CommonModule, FormsModule, IonContent, IonIcon, IonSpinner, IonFab, IonFabButton, IonBadge, BottomNavProviderComponent, SidebarComponent],
 })
 export class ProviderRdvPage implements OnInit {
   user: any = null;
   vue: Vue = 'liste';
   loading = false;
-
-  // Créneaux groupés par date
+  nbNotifNonLues = 0;
   creneauxBruts: any[] = [];
   creneauxParDate: { date: string; creneaux: any[]; expanded: boolean }[] = [];
-
-  // Vue clients d'un créneau
   creneauSelectionne: any = null;
   clientsDuCreneau: any[] = [];
   loadingClients = false;
-
-  // Formulaire
-  nouveauCreneau = {
-    heureDebut: '', heureFin: '',
-    dureePrestation: 30, dates: [] as string[]
-  };
+  nouveauCreneau = { heureDebut: '', heureFin: '', dureePrestation: 30, dates: [] as string[] };
   durees = [15, 20, 30, 45, 60];
   joursLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
   calendarDays: any[] = [];
@@ -60,30 +44,23 @@ export class ProviderRdvPage implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController
   ) {
-    addIcons({
-      addOutline, trashOutline, arrowBackOutline, checkmarkOutline,
-      checkmarkCircleOutline, closeCircleOutline, personRemoveOutline,
-      calendarOutline, timeOutline, chevronForwardOutline, chevronDownOutline
+    addIcons({ addOutline, trashOutline, arrowBackOutline, checkmarkOutline, checkmarkCircleOutline, closeCircleOutline, personRemoveOutline, calendarOutline, timeOutline, chevronForwardOutline, chevronDownOutline, notificationsOutline });
+  }
+
+  ngOnInit() { this.user = this.authService.getUser(); this.generateCalendar(); this.loadCreneaux(); this.chargerNotifsNonLues(); }
+  ionViewWillEnter() { this.loadCreneaux(); this.chargerNotifsNonLues(); }
+
+  chargerNotifsNonLues() {
+    this.api.get<any[]>('notifications').subscribe({
+      next: (data) => { this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length; },
+      error: () => { this.nbNotifNonLues = 0; }
     });
   }
 
-  ngOnInit() {
-    this.user = this.authService.getUser();
-    this.generateCalendar();
-    this.loadCreneaux();
-  }
-
-  ionViewWillEnter() { this.loadCreneaux(); }
-
-  // ── CHARGEMENT ET GROUPEMENT ─────────────────────────────────────
   loadCreneaux() {
     this.loading = true;
     this.api.get<any[]>('creneaux/prestataire').subscribe({
-      next: (data) => {
-        this.creneauxBruts = data || [];
-        this.grouperParDate();
-        this.loading = false;
-      },
+      next: (data) => { this.creneauxBruts = data || []; this.grouperParDate(); this.loading = false; },
       error: () => { this.creneauxBruts = []; this.creneauxParDate = []; this.loading = false; }
     });
   }
@@ -94,36 +71,27 @@ export class ProviderRdvPage implements OnInit {
       if (!map[c.date]) map[c.date] = [];
       map[c.date].push(c);
     }
-    // Trier les créneaux de chaque date par heure
     this.creneauxParDate = Object.keys(map)
       .sort((a, b) => {
         const [jA, mA, aA] = a.split('/').map(Number);
         const [jB, mB, aB] = b.split('/').map(Number);
         return new Date(aA, mA-1, jA).getTime() - new Date(aB, mB-1, jB).getTime();
       })
-      .map(date => ({
-        date,
-        creneaux: map[date].sort((a: any, b: any) => a.heureDebut.localeCompare(b.heureDebut)),
-        expanded: false
-      }));
+      .map(date => ({ date, creneaux: map[date].sort((a: any, b: any) => a.heureDebut.localeCompare(b.heureDebut)), expanded: false }));
   }
 
   toggleGroupe(groupe: any) { groupe.expanded = !groupe.expanded; }
 
-  // ── VOIR CLIENTS D'UN CRÉNEAU ─────────────────────────────────────
   voirClients(creneau: any) {
-  this.creneauSelectionne = creneau;
-  this.vue = 'clients-creneau';
-  this.loadingClients = true;
-  // Utiliser plageId si disponible, sinon creneauId
-  const id = creneau.id; // id de la plage
-  this.api.get<any[]>(`reservations/plage/${id}`).subscribe({
-    next: (data) => { this.clientsDuCreneau = data || []; this.loadingClients = false; },
-    error: () => { this.clientsDuCreneau = []; this.loadingClients = false; }
-  });
-}
+    this.creneauSelectionne = creneau;
+    this.vue = 'clients-creneau';
+    this.loadingClients = true;
+    this.api.get<any[]>(`reservations/plage/${creneau.id}`).subscribe({
+      next: (data) => { this.clientsDuCreneau = data || []; this.loadingClients = false; },
+      error: () => { this.clientsDuCreneau = []; this.loadingClients = false; }
+    });
+  }
 
-  // ── SUPPRESSION CRÉNEAU ───────────────────────────────────────────
   async supprimerCreneau(creneau: any) {
     const alert = await this.alertCtrl.create({
       header: 'Supprimer ce créneau ?',
@@ -140,26 +108,16 @@ export class ProviderRdvPage implements OnInit {
     const loader = await this.loadingCtrl.create({ message: 'Suppression...' });
     await loader.present();
     this.api.delete(`creneaux/${creneau.id}`).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        if (this.vue === 'clients-creneau') this.vue = 'liste';
-        this.loadCreneaux();
-        this.toast('Créneau supprimé', 'warning');
-      },
+      next: async () => { await loader.dismiss(); if (this.vue === 'clients-creneau') this.vue = 'liste'; this.loadCreneaux(); this.toast('Créneau supprimé', 'warning'); },
       error: async () => { await loader.dismiss(); this.toast('Erreur', 'danger'); }
     });
   }
 
-  // ── ACTIONS RDV ───────────────────────────────────────────────────
   async valider(rdv: any) {
     const loader = await this.loadingCtrl.create({ message: '...' });
     await loader.present();
     this.api.patch(`reservations/${rdv.id}/valider`, {}).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        rdv.statut = 'CONFIRMEE';
-        this.toast('RDV confirmé ✅', 'success');
-      },
+      next: async () => { await loader.dismiss(); rdv.statut = 'CONFIRMEE'; this.toast('RDV confirmé ✅', 'success'); },
       error: async () => { await loader.dismiss(); this.toast('Erreur', 'danger'); }
     });
   }
@@ -168,11 +126,7 @@ export class ProviderRdvPage implements OnInit {
     const loader = await this.loadingCtrl.create({ message: '...' });
     await loader.present();
     this.api.patch(`reservations/${rdv.id}/refuser`, {}).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        rdv.statut = 'REFUSEE';
-        this.toast('RDV refusé', 'warning');
-      },
+      next: async () => { await loader.dismiss(); rdv.statut = 'REFUSEE'; this.toast('RDV refusé', 'warning'); },
       error: async () => { await loader.dismiss(); this.toast('Erreur', 'danger'); }
     });
   }
@@ -181,47 +135,36 @@ export class ProviderRdvPage implements OnInit {
     const loader = await this.loadingCtrl.create({ message: '...' });
     await loader.present();
     this.api.patch(`reservations/${rdv.id}/absent`, {}).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        rdv.statut = 'MANQUE';
-        this.toast('Client marqué absent', 'warning');
-      },
+      next: async () => { await loader.dismiss(); rdv.statut = 'MANQUE'; this.toast('Client marqué absent', 'warning'); },
       error: async () => { await loader.dismiss(); this.toast('Erreur', 'danger'); }
     });
   }
 
-  // ── FORMULAIRE ────────────────────────────────────────────────────
   ouvrirFormulaire() { this.vue = 'form'; this.resetForm(); }
-  retourListe()      { this.vue = 'liste'; this.loadCreneaux(); }
+  retourListe() { this.vue = 'liste'; this.loadCreneaux(); }
 
   async ajouterCreneau() {
-    if (!this.nouveauCreneau.heureDebut || !this.nouveauCreneau.heureFin)
-      return this.toast('Définissez les heures', 'danger');
-    if (this.nouveauCreneau.heureDebut >= this.nouveauCreneau.heureFin)
-      return this.toast('Heure de fin doit être après le début', 'danger');
-    if (this.nouveauCreneau.dates.length === 0)
-      return this.toast('Sélectionnez au moins une date', 'danger');
-
+    if (!this.nouveauCreneau.heureDebut || !this.nouveauCreneau.heureFin) return this.toast('Définissez les heures', 'danger');
+    if (this.nouveauCreneau.heureDebut >= this.nouveauCreneau.heureFin) return this.toast('Heure de fin doit être après le début', 'danger');
+    if (this.nouveauCreneau.dates.length === 0) return this.toast('Sélectionnez au moins une date', 'danger');
     const loader = await this.loadingCtrl.create({ message: 'Création...' });
     await loader.present();
-    this.api.post('creneaux', {
-      heureDebut: this.nouveauCreneau.heureDebut,
-      heureFin: this.nouveauCreneau.heureFin,
-      dureePrestation: this.nouveauCreneau.dureePrestation,
-      dates: this.nouveauCreneau.dates
-    }).subscribe({
-      next: async () => {
-        await loader.dismiss();
-        this.vue = 'liste';
-        this.loadCreneaux();
-        this.toast(`Créneau ajouté pour ${this.nouveauCreneau.dates.length} date(s) !`, 'success');
-        this.resetForm();
-      },
+    this.api.post('creneaux', { heureDebut: this.nouveauCreneau.heureDebut, heureFin: this.nouveauCreneau.heureFin, dureePrestation: this.nouveauCreneau.dureePrestation, dates: this.nouveauCreneau.dates }).subscribe({
+      next: async () => { await loader.dismiss(); this.vue = 'liste'; this.loadCreneaux(); this.toast(`Créneau ajouté pour ${this.nouveauCreneau.dates.length} date(s) !`, 'success'); this.resetForm(); },
       error: async () => { await loader.dismiss(); this.toast('Erreur création', 'danger'); }
     });
   }
 
-  // ── CALENDRIER ────────────────────────────────────────────────────
+  async toggleCreneau(creneau: any) {
+    const nouvelEtat = creneau.actif === false ? true : false;
+    const loader = await this.loadingCtrl.create({ message: nouvelEtat ? 'Activation...' : 'Désactivation...' });
+    await loader.present();
+    this.api.patch(`creneaux/${creneau.id}/toggle`, { actif: nouvelEtat }).subscribe({
+      next: async () => { await loader.dismiss(); creneau.actif = nouvelEtat; this.toast(nouvelEtat ? 'Créneau activé ✅' : 'Créneau désactivé', nouvelEtat ? 'success' : 'warning'); },
+      error: async () => { await loader.dismiss(); this.toast('Erreur lors du changement de statut', 'danger'); }
+    });
+  }
+
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
@@ -238,13 +181,9 @@ export class ProviderRdvPage implements OnInit {
     }
   }
 
-  moisPrecedent() { this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth()-1,1); this.generateCalendar(); }
-  moisSuivant()   { this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth()+1,1); this.generateCalendar(); }
-  toggleDate(day: any) {
-    const idx = this.nouveauCreneau.dates.indexOf(day.date);
-    if (idx > -1) this.nouveauCreneau.dates.splice(idx, 1);
-    else this.nouveauCreneau.dates.push(day.date);
-  }
+  moisPrecedent() { this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth()-1, 1); this.generateCalendar(); }
+  moisSuivant()   { this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth()+1, 1); this.generateCalendar(); }
+  toggleDate(day: any) { const idx = this.nouveauCreneau.dates.indexOf(day.date); if (idx > -1) this.nouveauCreneau.dates.splice(idx, 1); else this.nouveauCreneau.dates.push(day.date); }
   isDateSelected(date: string) { return this.nouveauCreneau.dates.includes(date); }
   calculerCapacite(): number {
     if (!this.nouveauCreneau.heureDebut || !this.nouveauCreneau.heureFin) return 0;
@@ -253,30 +192,10 @@ export class ProviderRdvPage implements OnInit {
     const total = (hF*60+mF) - (hD*60+mD);
     return total <= 0 ? 0 : Math.floor(total / this.nouveauCreneau.dureePrestation);
   }
-  resetForm() {
-    this.nouveauCreneau = { heureDebut:'', heureFin:'', dureePrestation:30, dates:[] };
-    this.currentDate = new Date(); this.generateCalendar();
-  }
-
-  // ── HELPERS ───────────────────────────────────────────────────────
-  getStatutColor(s: string) {
-    const m: any = { CONFIRMEE:'#006c49', EN_ATTENTE:'#D4A017', REFUSEE:'#ba1a1a', ANNULEE:'#ba1a1a', MANQUE:'#C1614F' };
-    return m[s] || '#9fa1b0';
-  }
-  getStatutLabel(s: string) {
-    const m: any = { CONFIRMEE:'Confirmé', EN_ATTENTE:'En attente', REFUSEE:'Refusé', ANNULEE:'Annulé', MANQUE:'Absent' };
-    return m[s] || s;
-  }
-  private async toast(message: string, color: string) {
-    const t = await this.toastCtrl.create({ message, duration: 2500, color, position: 'top' });
-    await t.present();
-  }
-
-  getConfirmes(): any[] {
-  return this.clientsDuCreneau.filter(r => r.statut === 'CONFIRMEE');
-}
-
-getEnAttente(): any[] {
-  return this.clientsDuCreneau.filter(r => r.statut === 'EN_ATTENTE');
-}
+  resetForm() { this.nouveauCreneau = { heureDebut:'', heureFin:'', dureePrestation:30, dates:[] }; this.currentDate = new Date(); this.generateCalendar(); }
+  getStatutColor(s: string) { const m: any = { CONFIRMEE:'#006c49', EN_ATTENTE:'#D4A017', REFUSEE:'#ba1a1a', ANNULEE:'#ba1a1a', MANQUE:'#C1614F' }; return m[s] || '#9fa1b0'; }
+  getStatutLabel(s: string) { const m: any = { CONFIRMEE:'Confirmé', EN_ATTENTE:'En attente', REFUSEE:'Refusé', ANNULEE:'Annulé', MANQUE:'Absent' }; return m[s] || s; }
+  private async toast(message: string, color: string) { const t = await this.toastCtrl.create({ message, duration: 2500, color, position: 'top' }); await t.present(); }
+  getConfirmes(): any[] { return this.clientsDuCreneau.filter(r => r.statut === 'CONFIRMEE'); }
+  getEnAttente(): any[] { return this.clientsDuCreneau.filter(r => r.statut === 'EN_ATTENTE'); }
 }

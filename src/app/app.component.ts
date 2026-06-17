@@ -1,13 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { provideHttpClient } from '@angular/common/http';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { FcmService } from './services/fcm.service';
+import { AuthService } from './services/auth';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent {
-  constructor() {}
+export class AppComponent implements OnInit {
+
+  constructor(
+    private fcmService: FcmService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    // Demander permission et enregistrer token si connecté
+    if (this.authService.getUser()) {
+      this.fcmService.requestPermissionAndGetToken();
+      this.fcmService.listenForeground();
+    }
+  }
 }

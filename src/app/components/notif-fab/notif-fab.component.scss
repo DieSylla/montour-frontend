@@ -1,0 +1,37 @@
+:host {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+}
+
+ion-fab {
+  position: fixed !important;
+  top: 16px !important;
+  right: 16px !important;
+  margin: 0 !important;
+}
+
+ion-fab-button {
+  --background: rgba(255, 255, 255, 0.9);
+  --background-activated: rgba(255, 255, 255, 0.7);
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  ion-icon {
+    color: #1C6E8C;
+    font-size: 22px;
+  }
+}
+
+ion-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 4px;
+}

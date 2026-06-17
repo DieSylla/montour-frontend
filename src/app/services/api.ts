@@ -3,8 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 
-export const API_URL = 'http://localhost:3000/api/v1';
-
+ export const API_URL = 'http://localhost:3000/api/v1';
+// export const API_URL = 'http://192.168.56.1:3000/api/v1';
+//export const API_URL = 'http://10.0.2.2:3000/api/v1';
+//export const API_URL = 'http://192.168.1.2:3000/api/v1';
 @Injectable({
   providedIn: 'root'
 })

@@ -262,3 +262,25 @@ ion-content { --background: #f4f6f9; }
     min-height: 100vh;
   }
 }
+
+.c-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fdecea;
+  color: #ba1a1a;
+  transition: all 0.2s;
+
+  ion-icon { font-size: 16px; }
+
+  &.actif {
+    background: #e8f5ee;
+    color: #006c49;
+  }
+}

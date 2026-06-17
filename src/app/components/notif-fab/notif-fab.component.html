@@ -1,0 +1,8 @@
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button size="small" (click)="router.navigate(['/notifications'])">
+    <ion-icon name="notifications-outline"></ion-icon>
+    <ion-badge *ngIf="nbNotifNonLues > 0" color="danger">
+      {{ nbNotifNonLues }}
+    </ion-badge>
+  </ion-fab-button>
+</ion-fab>

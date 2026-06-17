@@ -1,31 +1,31 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonContent, IonIcon, IonSpinner, ToastController, AlertController } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner, ToastController, AlertController, IonFab, IonFabButton, IonBadge } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { ticketOutline, calendarOutline, closeCircleOutline, refreshOutline, timeOutline, personOutline, businessOutline } from 'ionicons/icons';
+import { ticketOutline, calendarOutline, closeCircleOutline, refreshOutline, timeOutline, personOutline, businessOutline, notificationsOutline } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
 import { ApiService } from '../../services/api';
 import { BottomNavComponent } from '../../components/bottom-nav/bottom-nav.component';
 import { Subscription, interval } from 'rxjs';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 
-
 @Component({
   selector: 'app-mes-rdv',
   templateUrl: './mes-rdv.page.html',
   styleUrls: ['./mes-rdv.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent,SidebarComponent],
+  imports: [CommonModule, IonContent, IonIcon, IonSpinner, BottomNavComponent, SidebarComponent, IonFab, IonFabButton, IonBadge],
 })
 export class MesRdvPage implements OnInit, OnDestroy {
   user: any = null;
   ticketActif: any = null;
   reservations: any[] = [];
   loading = false;
+  heureEstimee = '';
+  nbPersonnes = 0;
+  nbNotifNonLues = 0;
   private polling: Subscription | null = null;
-
-  // Cache des noms
   private prestatairesCache: Record<string, any> = {};
   private entreprisesCache: Record<string, any> = {};
 
@@ -36,17 +36,17 @@ export class MesRdvPage implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
   ) {
-    addIcons({ ticketOutline, calendarOutline, closeCircleOutline, refreshOutline, timeOutline, personOutline, businessOutline });
+    addIcons({ ticketOutline, calendarOutline, closeCircleOutline, refreshOutline, timeOutline, personOutline, businessOutline, notificationsOutline });
   }
 
-  ngOnInit()        { this.user = this.authService.getUser(); this.loadAll(); }
-  ionViewWillEnter(){ this.loadAll(); this.startPolling(); }
-  ionViewWillLeave(){ this.stopPolling(); }
-  ngOnDestroy()     { this.stopPolling(); }
+  ngOnInit()         { this.user = this.authService.getUser(); this.loadAll(); }
+  ionViewWillEnter() { this.loadAll(); this.startPolling(); }
+  ionViewWillLeave() { this.stopPolling(); }
+  ngOnDestroy()      { this.stopPolling(); }
 
   startPolling() {
     this.stopPolling();
-    this.polling = interval(10000).subscribe(() => this.loadTicket());
+    this.polling = interval(10000).subscribe(() => { this.loadTicket(); this.chargerNotifsNonLues(); });
   }
   stopPolling() { this.polling?.unsubscribe(); this.polling = null; }
 
@@ -54,36 +54,65 @@ export class MesRdvPage implements OnInit, OnDestroy {
     this.loading = true;
     this.loadTicket();
     this.loadReservations();
+    this.chargerNotifsNonLues();
   }
 
   loadTicket() {
     this.api.get<any>('tickets/actif').subscribe({
-      next: (t: any) => { this.ticketActif = t; this.loading = false; },
-      error: ()      => { this.ticketActif = null; this.loading = false; }
+      next: (t: any) => {
+        this.ticketActif = t;
+        this.loading = false;
+        if (t) {
+          this.calculerHeure(t.tempsAttenteEstime);
+          this.chargerNbPersonnes(t.prestataireId);
+        }
+      },
+      error: () => { this.ticketActif = null; this.loading = false; }
+    });
+  }
+
+  chargerNotifsNonLues() {
+    this.api.get<any[]>('notifications').subscribe({
+      next: (data) => {
+        this.nbNotifNonLues = (data || []).filter((n: any) => !n.lu).length;
+      },
+      error: () => { this.nbNotifNonLues = 0; }
+    });
+  }
+
+  calculerHeure(minutes: number) {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + minutes);
+    this.heureEstimee = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+  }
+
+  chargerNbPersonnes(prestataireId: string) {
+    this.api.get<any>(`tickets/file/${prestataireId}`).subscribe({
+      next: (data: any) => { this.nbPersonnes = data?.total || 0; },
+      error: () => { this.nbPersonnes = 0; }
     });
   }
 
   loadReservations() {
-  this.api.get<any[]>('reservations/mes-reservations').subscribe({
-    next: (data) => {
-      // Charger toutes les entreprises une seule fois
-      this.api.get<any[]>('entreprises').subscribe({
-        next: (entreprises) => {
-          this.reservations = (data || []).map(rdv => ({
-            ...rdv,
-            etablissementNom: entreprises.find(e => e.id === rdv.entrepriseId)?.nom || 'Établissement',
-            prestataireNom: rdv.prestataireNom || rdv.specialite || 'Prestataire',
-          })).sort((a, b) => {
-            if (a.date !== b.date) return a.date.localeCompare(b.date);
-            return (a.heureDebut || '').localeCompare(b.heureDebut || '');
-          });
-        },
-        error: () => { this.reservations = data || []; }
-      });
-    },
-    error: () => { this.reservations = []; }
-  });
-}
+    this.api.get<any[]>('reservations/mes-reservations').subscribe({
+      next: (data) => {
+        this.api.get<any[]>('entreprises').subscribe({
+          next: (entreprises) => {
+            this.reservations = (data || []).map(rdv => ({
+              ...rdv,
+              etablissementNom: entreprises.find(e => e.id === rdv.entrepriseId)?.nom || 'Établissement',
+              prestataireNom: rdv.prestataireNom || rdv.specialite || 'Prestataire',
+            })).sort((a, b) => {
+              if (a.date !== b.date) return a.date.localeCompare(b.date);
+              return (a.heureDebut || '').localeCompare(b.heureDebut || '');
+            });
+          },
+          error: () => { this.reservations = data || []; }
+        });
+      },
+      error: () => { this.reservations = []; }
+    });
+  }
 
   async getPrestataireNom(prestataireId: string): Promise<string> {
     if (!prestataireId) return 'Prestataire';
@@ -103,8 +132,6 @@ export class MesRdvPage implements OnInit, OnDestroy {
   async getEntrepriseNom(entrepriseId: string): Promise<string> {
     if (!entrepriseId) return 'Établissement';
     if (this.entreprisesCache[entrepriseId]) return this.entreprisesCache[entrepriseId];
-
-    // Chercher dans la liste des entreprises
     const entreprises: any[] = await new Promise(resolve => {
       this.api.get<any[]>('entreprises').subscribe({
         next: (data) => resolve(data || []),
@@ -132,6 +159,8 @@ export class MesRdvPage implements OnInit, OnDestroy {
           this.api.patch(`tickets/${this.ticketActif.id}/annuler`, {}).subscribe({
             next: async () => {
               this.ticketActif = null;
+              this.heureEstimee = '';
+              this.nbPersonnes = 0;
               const t = await this.toastCtrl.create({ message: 'Ticket annulé', duration: 2000, color: 'success' });
               await t.present();
             },

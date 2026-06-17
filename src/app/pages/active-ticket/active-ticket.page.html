@@ -39,21 +39,35 @@
       </div>
 
       <div class="info-grid mb-6">
-        <div class="info-card">
-          <span style="font-size: 20px;">👥</span>
-          <div>
-            <p class="info-label">Devant vous</p>
-            <p class="info-value">{{ ticket.rang }} personne(s)</p>
-          </div>
-        </div>
-        <div class="info-card">
-          <span style="font-size: 20px;">🕐</span>
-          <div>
-            <p class="info-label">Heure de passage</p>
-            <p class="info-value">{{ heureEstimee }}</p>
-          </div>
-        </div>
-      </div>
+  <div class="info-card">
+    <span style="font-size: 20px;">👥</span>
+    <div>
+      <p class="info-label">Personnes dans la file</p>
+      <p class="info-value">{{ nbPersonnes }} personne(s)</p>
+    </div>
+  </div>
+  <div class="info-card">
+    <span style="font-size: 20px;">🔢</span>
+    <div>
+      <p class="info-label">Votre position</p>
+      <p class="info-value">{{ ticket.rang }}ème</p>
+    </div>
+  </div>
+  <div class="info-card">
+    <span style="font-size: 20px;">🕐</span>
+    <div>
+      <p class="info-label">Heure de passage</p>
+      <p class="info-value">{{ heureEstimee }}</p>
+    </div>
+  </div>
+  <div class="info-card">
+    <span style="font-size: 20px;">⏱️</span>
+    <div>
+      <p class="info-label">Temps d'attente</p>
+      <p class="info-value">{{ ticket.tempsAttenteEstime }} min</p>
+    </div>
+  </div>
+</div>
 
       <div class="map-section mb-6">
         <h3 style="font-size: 16px; font-weight: 700; color: #191c1e; margin-bottom: 12px;">Localisation du guichet</h3>
