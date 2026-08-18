@@ -198,10 +198,7 @@ Au Sénégal, de nombreuses structures de service cliniques, garages, administra
 
 MonTour permet aux clients de prendre des tickets virtuels et de réserver des rendez-vous auprès de prestataires de services, sans faire la queue physiquement. Les prestataires disposent d'un dashboard pour valider les rendez-vous, suivre la présence des clients (vérification GPS) et gérer les absences automatiquement.
 
-## 📱 Démo
 
-[🎥 Voir la démo vidéo](LIEN_VERS_VIDEO_OU_GIF)
-<!-- Insère un GIF (ScreenToGif / Kap) ou un lien Loom/YouTube -->
 
 ### Rôles disponibles
 | Rôle | Description |
@@ -308,7 +305,7 @@ ionic capacitor run android
 
 ---
 
-## 🧪 Comptes de test
+<!-- ## 🧪 Comptes de test
 
 > ⚠️ Assurez-vous que le backend est bien démarré avant de tester.
 > ⚠️ À retirer ou déplacer dans un `.env` non commité avant tout usage en production.
@@ -331,7 +328,7 @@ ionic capacitor run android
 | Email | `aminata@montour.sn` |
 | Mot de passe | `client123` |
 
----
+--- -->
 
 ## 📂 Structure du projet
 
