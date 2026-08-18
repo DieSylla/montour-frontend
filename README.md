@@ -305,7 +305,7 @@ ionic capacitor run android
 
 ---
 
-<!-- ## 🧪 Comptes de test
+## 🧪 Comptes de test
 
 > ⚠️ Assurez-vous que le backend est bien démarré avant de tester.
 > ⚠️ À retirer ou déplacer dans un `.env` non commité avant tout usage en production.
@@ -328,7 +328,7 @@ ionic capacitor run android
 | Email | `aminata@montour.sn` |
 | Mot de passe | `client123` |
 
---- -->
+--- 
 
 ## 📂 Structure du projet
 
