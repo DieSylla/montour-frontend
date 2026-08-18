@@ -192,7 +192,7 @@ Ce projet est développé dans le cadre d'un mémoire académique. -->
 
 ## 🎯 Le problème
 
-Au Sénégal, de nombreuses structures de service — cliniques, garages, administrations, salons — gèrent encore l'attente et les rendez-vous manuellement. Résultat : temps d'attente imprévisible, files physiques encombrées, et aucune visibilité pour le client sur son tour réel.
+Au Sénégal, de nombreuses structures de service cliniques, garages, administrations, salons gèrent encore l'attente et les rendez-vous manuellement. Résultat : temps d'attente imprévisible, files physiques encombrées, et aucune visibilité pour le client sur son tour réel.
 
 ## 💡 La solution
 
